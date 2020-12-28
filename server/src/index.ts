@@ -13,6 +13,10 @@ const main = async () => {
 
 	io.on("connection", (socket: Socket) => {
 		console.log("New WS connection", socket.id);
+		socket.on("message", (msg: any) => {
+			console.log(msg);
+			socket.broadcast.emit("message", msg);
+		});
 		socket.on("draw", (msg: any) => {
 			console.log(msg);
 			socket.broadcast.emit("draw", msg);
@@ -24,6 +28,13 @@ const main = async () => {
 		socket.on("finishdraw", (msg: any) => {
 			console.log("finishdraw", msg);
 			socket.broadcast.emit("finishdraw", msg);
+		});
+		socket.on("clear_canvas", (msg: any) => {
+			console.log("clear_canvas", msg);
+			socket.broadcast.emit("clear_canvas", msg);
+		});
+		socket.on("disconnect", (socket: Socket) => {
+			console.log("Closed connection with ", socket.id);
 		});
 	});
 
