@@ -1,4 +1,5 @@
-import React, { createContext, useRef, useState } from "react";
+import React, { createContext, useEffect, useRef, useState } from "react";
+import { DrawMsg } from "../models/draw.models";
 
 interface IDrawingContext {
 	isDrawing: boolean;
@@ -14,9 +15,10 @@ interface IDrawingContext {
 			width: number;
 		}>
 	>;
-	startDrawing: any;
-	finishDrawing: any;
-	draw: any;
+	startDrawing: (msg: DrawMsg) => any;
+	finishDrawing: () => any;
+	draw: (msg: DrawMsg) => any;
+	clearCanvas: () => void;
 }
 
 export const DrawingBoardContext = createContext<IDrawingContext>(
@@ -24,22 +26,31 @@ export const DrawingBoardContext = createContext<IDrawingContext>(
 );
 
 export const DrawingBoardProvider: React.FC = (props) => {
+	const canvasContext = useRef<CanvasRenderingContext2D>();
 	const [isDrawing, setIsDrawing] = useState<boolean>(false);
 	const [drawSettings, setDrawSettings] = useState({
 		color: "#000",
 		width: 5,
 	});
-	const canvasContext = useRef<CanvasRenderingContext2D>();
 
-	const startDrawing = (msg: any) => {
+	const clearCanvas = () => {
+		canvasContext.current.clearRect(
+			0,
+			0,
+			window.innerWidth,
+			window.innerHeight
+		);
+	};
+
+	const startDrawing = (msg: DrawMsg) => {
 		if (!canvasContext.current) return;
-		const { offsetX, offsetY, color } = msg;
+		const { x, y, color, width } = msg;
 		canvasContext.current.strokeStyle = color || drawSettings.color;
-		canvasContext.current.lineWidth = drawSettings.width;
+		canvasContext.current.lineWidth = width || drawSettings.width;
 		canvasContext.current.lineCap = "round";
 		canvasContext.current.lineJoin = "round";
 		canvasContext.current.beginPath();
-		canvasContext.current.moveTo(offsetX, offsetY);
+		canvasContext.current.moveTo(x, y);
 	};
 
 	const finishDrawing = () => {
@@ -47,10 +58,10 @@ export const DrawingBoardProvider: React.FC = (props) => {
 		canvasContext.current.closePath();
 	};
 
-	const draw = (coordinates: any) => {
+	const draw = (coordinates: DrawMsg) => {
 		if (!canvasContext.current) return;
-		const { offsetX, offsetY } = coordinates;
-		canvasContext.current.lineTo(offsetX, offsetY);
+		const { x, y } = coordinates;
+		canvasContext.current.lineTo(x, y);
 		canvasContext.current.stroke();
 	};
 
@@ -65,6 +76,7 @@ export const DrawingBoardProvider: React.FC = (props) => {
 				draw,
 				finishDrawing,
 				startDrawing,
+				clearCanvas,
 			}}
 		>
 			{props.children}

@@ -1,18 +1,26 @@
-import React, { useContext, useRef, useState } from "react";
-import { DrawingBoardContext } from "../../context/DrawingBoardProvider";
+import React from "react";
 
 interface Props {
-	render?: any;
+	setDrawSettings: React.Dispatch<
+		React.SetStateAction<{
+			color: string;
+			width: number;
+		}>
+	>;
+	drawSettings: {
+		color: string;
+		width: number;
+	};
+	onCanvasClear: () => any;
 }
 
-const Board: React.FC<Props> = (props) => {
-	const { setDrawSettings, drawSettings, canvasContext } = useContext(
-		DrawingBoardContext
-	);
-
+const BoardControl: React.FC<Props> = ({
+	drawSettings,
+	setDrawSettings,
+	onCanvasClear,
+}) => {
 	return (
 		<div>
-			{props.children}
 			<input
 				type="number"
 				onChange={(e) =>
@@ -33,9 +41,9 @@ const Board: React.FC<Props> = (props) => {
 				}
 				value={drawSettings.color}
 			/>
-			<button onClick={() => console.log(canvasContext)}>Clicki</button>
+			<button onClick={onCanvasClear}>Clear</button>
 		</div>
 	);
 };
 
-export default Board;
+export default BoardControl;

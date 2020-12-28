@@ -6,21 +6,19 @@ import React, {
 	useState,
 } from "react";
 import { DrawingBoardContext } from "../../context/DrawingBoardProvider";
+import { DrawMsg } from "../../models/draw.models";
 
-interface Props {}
+interface Props {
+	onMouseUp: (event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => void;
+	onMouseDown: (event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => void;
+	onMouseMove: (event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => void;
+}
 
-const Canvas: React.FC<Props> = () => {
+const Canvas: React.FC<Props> = ({ onMouseUp, onMouseDown, onMouseMove }) => {
 	const sketchRef = useRef<HTMLCanvasElement>();
 	const parentRef = useRef<HTMLDivElement>(null);
 
-	const {
-		canvasContext,
-		isDrawing,
-		draw,
-		startDrawing,
-		finishDrawing,
-		setIsDrawing,
-	} = useContext(DrawingBoardContext);
+	const { canvasContext } = useContext(DrawingBoardContext);
 
 	useEffect(() => {
 		const canvas = sketchRef.current;
@@ -37,24 +35,8 @@ const Canvas: React.FC<Props> = () => {
 		}
 	}, [parentRef]);
 
-	const onMouseMove = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
-		if (!isDrawing) return;
-		const { offsetX, offsetY } = e.nativeEvent;
-		draw({ offsetX, offsetY });
-	};
-
-	const onMouseDown = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
-		setIsDrawing(true);
-		startDrawing(e.nativeEvent);
-	};
-
-	const onMouseUp = () => {
-		setIsDrawing(false);
-		finishDrawing();
-	};
-
 	return (
-		<div ref={parentRef} style={{ height: "600px" }}>
+		<div ref={parentRef} style={{ height: "600px", width: "50%" }}>
 			<canvas
 				ref={sketchRef}
 				onMouseUp={onMouseUp}
@@ -62,10 +44,6 @@ const Canvas: React.FC<Props> = () => {
 				onMouseMove={onMouseMove}
 				style={{ backgroundColor: "#bbb" }}
 			/>
-
-			<button onClick={() => console.log(parentRef.current.clientWidth)}>
-				CLick
-			</button>
 		</div>
 	);
 };
