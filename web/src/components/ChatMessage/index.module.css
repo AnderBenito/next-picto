@@ -1,0 +1,12 @@
+.message {
+	display: flex;
+	flex-direction: column;
+}
+
+.my-message {
+	align-self: flex-start;
+}
+
+.other-message {
+	align-self: flex-end;
+}

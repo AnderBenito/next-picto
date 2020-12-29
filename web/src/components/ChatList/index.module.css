@@ -1,0 +1,14 @@
+.chat-list {
+	height: 100%;
+}
+
+.chat-list ul {
+	background-color: tomato;
+	overflow-y: scroll;
+	height: 100%;
+	margin: 0px;
+	padding: 1rem;
+	list-style: none;
+	display: flex;
+	flex-direction: column;
+}
