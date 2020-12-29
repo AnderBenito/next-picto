@@ -1,4 +1,5 @@
 import React from "react";
+import styles from "./index.module.css";
 
 interface Props {
 	setDrawSettings: React.Dispatch<
@@ -20,7 +21,7 @@ const BoardControl: React.FC<Props> = ({
 	onCanvasClear,
 }) => {
 	return (
-		<div>
+		<div className={styles["container"]}>
 			<input
 				type="number"
 				onChange={(e) =>

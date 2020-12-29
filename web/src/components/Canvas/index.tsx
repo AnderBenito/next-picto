@@ -36,7 +36,7 @@ const Canvas: React.FC<Props> = ({ onMouseUp, onMouseDown, onMouseMove }) => {
 	}, [parentRef]);
 
 	return (
-		<div ref={parentRef} style={{ height: "600px", width: "50%" }}>
+		<div ref={parentRef} style={{ height: "100%", width: "100%" }}>
 			<canvas
 				ref={sketchRef}
 				onMouseUp={onMouseUp}

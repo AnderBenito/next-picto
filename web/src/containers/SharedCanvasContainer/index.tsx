@@ -59,6 +59,7 @@ const SharedCanvasContainer: React.FC = () => {
 		finishDrawing();
 		socket.emit("finishdraw");
 	};
+
 	return (
 		<Canvas
 			onMouseDown={onMouseDown}
