@@ -2,18 +2,21 @@ import React, { useContext, useEffect, useState } from "react";
 import ChatList from "../../components/ChatList";
 import ChatForm from "../../components/ChatForm";
 import { SocketContext } from "../../context/SocketProvider";
-import { ChatMsg, ClientChatMsg } from "../../models/chat.models";
+import {
+	ChatData,
+	ClientChatData,
+} from "../../../../shared/models/chat.models";
 import styles from "./index.module.css";
 
 const ChatContainer: React.FC = () => {
 	const { socket } = useContext(SocketContext);
 	const [message, setMessage] = useState<string>("");
-	const [messageQueue, setMessageQueue] = useState<ClientChatMsg[]>([]);
+	const [messageQueue, setMessageQueue] = useState<ClientChatData[]>([]);
 
 	useEffect(() => {
-		socket.on("message", (msg: ChatMsg) => {
+		socket.on("message", (msg: ChatData) => {
 			console.log("Message received", msg);
-			const newMsg: ClientChatMsg = {
+			const newMsg: ClientChatData = {
 				...msg,
 				isMine: false,
 			};
@@ -26,7 +29,7 @@ const ChatContainer: React.FC = () => {
 
 	const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		const msg: ChatMsg = {
+		const msg: ChatData = {
 			username: "Ander",
 			text: message,
 		};

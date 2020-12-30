@@ -1,9 +1,9 @@
 import React from "react";
-import { ClientChatMsg } from "../../models/chat.models";
+import { ClientChatData } from "../../../../shared/models/chat.models";
 import styles from "./index.module.css";
 
 interface Props {
-	message: ClientChatMsg;
+	message: ClientChatData;
 }
 const ChatMessage: React.FC<Props> = ({ message }) => {
 	return (

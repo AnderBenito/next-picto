@@ -1,10 +1,10 @@
 import React from "react";
-import { ChatMsg, ClientChatMsg } from "../../models/chat.models";
+import { ClientChatData } from "../../../../shared/models/chat.models";
 import ChatMessage from "../ChatMessage";
 import styles from "./index.module.css";
 
 interface Props {
-	messageQueue: ClientChatMsg[];
+	messageQueue: ClientChatData[];
 }
 
 const ChatList: React.FC<Props> = ({ messageQueue }) => {

@@ -2,8 +2,7 @@ import React, { useContext, useEffect } from "react";
 import Canvas from "../../components/Canvas";
 import { DrawingBoardContext } from "../../context/DrawingBoardProvider";
 import { SocketContext } from "../../context/SocketProvider";
-import { DrawMsg } from "../../models/draw.models";
-
+import { DrawMsg } from "../../../../shared/messages/draw.messages";
 const SharedCanvasContainer: React.FC = () => {
 	const {
 		draw,
@@ -12,22 +11,15 @@ const SharedCanvasContainer: React.FC = () => {
 		isDrawing,
 		setIsDrawing,
 		drawSettings,
-		clearCanvas,
 	} = useContext(DrawingBoardContext);
 	const { socket } = useContext(SocketContext);
 
 	useEffect(() => {
-		socket.on("draw", (msg: DrawMsg) => {
-			draw(msg);
-		});
+		socket.on(DrawMsg.draw, draw);
 
-		socket.on("startdraw", (msg: DrawMsg) => {
-			startDrawing(msg);
-		});
+		socket.on(DrawMsg.draw_start, startDrawing);
 
-		socket.on("finishdraw", finishDrawing);
-
-		socket.on("clear_canvas", clearCanvas);
+		socket.on(DrawMsg.draw_finish, finishDrawing);
 
 		return () => socket.close();
 	}, []);
@@ -36,7 +28,7 @@ const SharedCanvasContainer: React.FC = () => {
 		if (!isDrawing) return;
 		const { offsetX, offsetY } = e.nativeEvent;
 		draw({ x: offsetX, y: offsetY });
-		socket.emit("draw", {
+		socket.emit(DrawMsg.draw, {
 			x: offsetX,
 			y: offsetY,
 		});
@@ -46,7 +38,7 @@ const SharedCanvasContainer: React.FC = () => {
 		const { offsetX, offsetY } = e.nativeEvent;
 		setIsDrawing(true);
 		startDrawing({ x: offsetX, y: offsetY });
-		socket.emit("startdraw", {
+		socket.emit(DrawMsg.draw_start, {
 			x: offsetX,
 			y: offsetY,
 			color: drawSettings.color,
@@ -57,7 +49,7 @@ const SharedCanvasContainer: React.FC = () => {
 	const onMouseUp = () => {
 		setIsDrawing(false);
 		finishDrawing();
-		socket.emit("finishdraw");
+		socket.emit(DrawMsg.draw_finish);
 	};
 
 	return (

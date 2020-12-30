@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useRef, useState } from "react";
-import { DrawMsg } from "../models/draw.models";
+import { DrawData } from "../../../shared/models/draw.models";
 
 interface IDrawingContext {
 	isDrawing: boolean;
@@ -15,9 +15,9 @@ interface IDrawingContext {
 			width: number;
 		}>
 	>;
-	startDrawing: (msg: DrawMsg) => any;
+	startDrawing: (msg: DrawData) => any;
 	finishDrawing: () => any;
-	draw: (msg: DrawMsg) => any;
+	draw: (msg: DrawData) => any;
 	clearCanvas: () => void;
 }
 
@@ -42,7 +42,7 @@ export const DrawingBoardProvider: React.FC = (props) => {
 		);
 	};
 
-	const startDrawing = (msg: DrawMsg) => {
+	const startDrawing = (msg: DrawData) => {
 		if (!canvasContext.current) return;
 		const { x, y, color, width } = msg;
 		canvasContext.current.strokeStyle = color || drawSettings.color;
@@ -58,7 +58,7 @@ export const DrawingBoardProvider: React.FC = (props) => {
 		canvasContext.current.closePath();
 	};
 
-	const draw = (coordinates: DrawMsg) => {
+	const draw = (coordinates: DrawData) => {
 		if (!canvasContext.current) return;
 		const { x, y } = coordinates;
 		canvasContext.current.lineTo(x, y);

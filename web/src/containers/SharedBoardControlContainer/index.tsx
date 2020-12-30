@@ -1,4 +1,5 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
+import { DrawMsg } from "../../../../shared/messages/draw.messages";
 import BoardControl from "../../components/BoardControl";
 import { DrawingBoardContext } from "../../context/DrawingBoardProvider";
 import { SocketContext } from "../../context/SocketProvider";
@@ -11,8 +12,12 @@ const SharedBoardControlContainer: React.FC = () => {
 
 	const onCanvasClear = () => {
 		clearCanvas();
-		socket.emit("clear_canvas");
+		socket.emit(DrawMsg.canvas_clear);
 	};
+
+	useEffect(() => {
+		socket.on(DrawMsg.canvas_clear, clearCanvas);
+	}, []);
 
 	return (
 		<BoardControl

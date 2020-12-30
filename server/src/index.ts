@@ -1,6 +1,10 @@
 import express from "express";
 import http from "http";
 import { Server, Socket } from "socket.io";
+import { ChatMsg } from "../../shared/messages/chat.messages";
+import { DrawMsg } from "../../shared/messages/draw.messages";
+import { DrawData } from "../../shared/models/draw.models";
+import { ChatData } from "./../../shared/models/chat.models";
 
 const main = async () => {
 	const app = express();
@@ -13,26 +17,31 @@ const main = async () => {
 
 	io.on("connection", (socket: Socket) => {
 		console.log("New WS connection", socket.id);
-		socket.on("message", (msg: any) => {
+		socket.on(ChatMsg.message, (msg: ChatData) => {
 			console.log(msg);
 			socket.broadcast.emit("message", msg);
 		});
-		socket.on("draw", (msg: any) => {
+
+		socket.on(DrawMsg.draw, (msg: DrawData) => {
 			console.log(msg);
-			socket.broadcast.emit("draw", msg);
+			socket.broadcast.emit(DrawMsg.draw, msg);
 		});
-		socket.on("startdraw", (msg: any) => {
+
+		socket.on(DrawMsg.draw_start, (msg: DrawData) => {
 			console.log("startdraw", msg);
-			socket.broadcast.emit("startdraw", msg);
+			socket.broadcast.emit(DrawMsg.draw_start, msg);
 		});
-		socket.on("finishdraw", (msg: any) => {
-			console.log("finishdraw", msg);
-			socket.broadcast.emit("finishdraw", msg);
+
+		socket.on(DrawMsg.draw_finish, () => {
+			console.log("finishdraw");
+			socket.broadcast.emit(DrawMsg.draw_finish);
 		});
-		socket.on("clear_canvas", (msg: any) => {
-			console.log("clear_canvas", msg);
-			socket.broadcast.emit("clear_canvas", msg);
+
+		socket.on(DrawMsg.canvas_clear, () => {
+			console.log("clear_canvas");
+			socket.broadcast.emit(DrawMsg.canvas_clear);
 		});
+
 		socket.on("disconnect", (socket: Socket) => {
 			console.log("Closed connection with ", socket.id);
 		});
