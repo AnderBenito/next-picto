@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useRef, useState } from "react";
-import { DrawData } from "../../../shared/models/draw.models";
+import { DrawData } from "../../../shared/models/draw.model";
 
 interface IDrawingContext {
 	isDrawing: boolean;

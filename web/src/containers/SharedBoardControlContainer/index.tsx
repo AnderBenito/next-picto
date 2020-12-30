@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { DrawMsg } from "../../../../shared/messages/draw.messages";
+import { DrawMsg } from "../../../../shared/messages/draw.message";
 import BoardControl from "../../components/BoardControl";
 import { DrawingBoardContext } from "../../context/DrawingBoardProvider";
 import { SocketContext } from "../../context/SocketProvider";

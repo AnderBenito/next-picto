@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from "react";
 import Canvas from "../../components/Canvas";
 import { DrawingBoardContext } from "../../context/DrawingBoardProvider";
 import { SocketContext } from "../../context/SocketProvider";
-import { DrawMsg } from "../../../../shared/messages/draw.messages";
+import { DrawMsg } from "../../../../shared/messages/draw.message";
 const SharedCanvasContainer: React.FC = () => {
 	const {
 		draw,

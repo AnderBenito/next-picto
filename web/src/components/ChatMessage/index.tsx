@@ -1,5 +1,5 @@
 import React from "react";
-import { ClientChatData } from "../../../../shared/models/chat.models";
+import { ClientChatData } from "../../../../shared/models/chat.model";
 import styles from "./index.module.css";
 
 interface Props {
