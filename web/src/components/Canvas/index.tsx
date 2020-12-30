@@ -1,12 +1,6 @@
-import React, {
-	useCallback,
-	useContext,
-	useEffect,
-	useRef,
-	useState,
-} from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { DrawingBoardContext } from "../../context/DrawingBoardProvider";
-import { DrawMsg } from "../../models/draw.models";
+import styles from "./index.module.css";
 
 interface Props {
 	onMouseUp: (event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => void;
@@ -36,13 +30,12 @@ const Canvas: React.FC<Props> = ({ onMouseUp, onMouseDown, onMouseMove }) => {
 	}, [parentRef]);
 
 	return (
-		<div ref={parentRef} style={{ height: "100%", width: "100%" }}>
+		<div ref={parentRef} className={styles["container"]}>
 			<canvas
 				ref={sketchRef}
 				onMouseUp={onMouseUp}
 				onMouseDown={onMouseDown}
 				onMouseMove={onMouseMove}
-				style={{ backgroundColor: "#bbb" }}
 			/>
 		</div>
 	);
