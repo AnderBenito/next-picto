@@ -1,11 +1,12 @@
 import React, { createContext, useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { RoomMsg } from "../../../shared/messages/room.message";
-import { UserData } from "../../../shared/models/user.model";
+import { ClientUserData, UserData } from "../../../shared/models/user.model";
 
 interface Props {
 	url: string;
-	userData?: UserData;
+	roomId?: string;
+	userData: UserData;
 }
 
 interface ISocketContext {
@@ -19,6 +20,7 @@ export const SocketContext = createContext<ISocketContext>(
 
 export const SocketProvider: React.FC<Props> = ({
 	url,
+	roomId,
 	userData,
 	children,
 }) => {
@@ -26,13 +28,24 @@ export const SocketProvider: React.FC<Props> = ({
 
 	useEffect(() => {
 		const socket = io(url);
-		if (userData) {
-			console.log("Going to room");
-			socket.emit(RoomMsg.join, userData);
-		}
-
 		setSocket(socket);
+
+		return () => {
+			socket.emit(RoomMsg.leave, roomId);
+		};
 	}, []);
+
+	useEffect(() => {
+		if (!roomId || !socket) return;
+		const msg: ClientUserData = {
+			...userData,
+			roomId: roomId,
+		};
+
+		console.log("Going to room");
+		socket.emit(RoomMsg.join, msg);
+	}, [userData, socket, roomId]);
+
 	return (
 		<SocketContext.Provider value={{ socket, setSocket }}>
 			{socket && children}

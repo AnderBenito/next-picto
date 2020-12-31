@@ -1,17 +1,15 @@
 import React, { useContext } from "react";
 import { useRouter } from "next/router";
 import { UserContext } from "../../context/UserProvider";
+import { v4 } from "uuid";
 
 const HomeContainer: React.FC = () => {
-	const { user, setUser } = useContext(UserContext);
+	const { user, setUser, saveUserData } = useContext(UserContext);
 	const router = useRouter();
 
 	const onPlay = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-		setUser({
-			...user,
-			roomId: "someRoomId",
-		});
-		router.push("/play");
+		saveUserData();
+		router.push(`/${v4()}`);
 	};
 
 	return (
@@ -27,7 +25,7 @@ const HomeContainer: React.FC = () => {
 					})
 				}
 			></input>
-			<button onClick={onPlay}>Play</button>
+			<button onClick={onPlay}>Create Room</button>
 		</div>
 	);
 };

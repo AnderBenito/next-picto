@@ -5,13 +5,20 @@ import SharedCanvasContainer from "../SharedCanvasContainer";
 import SharedBoardControlContainer from "../SharedBoardControlContainer";
 import ChatContainer from "../ChatContainer";
 import styles from "./index.module.css";
-import { UserContext } from "../../context/UserProvider";
+import { UserData } from "../../../../shared/models/user.model";
 
-const DrawingBoardContainer: React.FC = () => {
-	const { user } = useContext(UserContext);
+interface Props {
+	userData: UserData;
+	roomId?: string;
+}
 
+const DrawingBoardContainer: React.FC<Props> = ({ roomId, userData }) => {
 	return (
-		<SocketProvider url="http://localhost:5000" userData={user}>
+		<SocketProvider
+			url="http://localhost:5000"
+			userData={userData}
+			roomId={roomId}
+		>
 			<div className={styles["container"]}>
 				<DrawingBoardProvider>
 					<div className={styles["board-container"]}>
