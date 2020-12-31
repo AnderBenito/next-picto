@@ -1,5 +1,11 @@
 export interface UserData {
-	userId: string;
 	username: string;
+}
+
+export interface ClientUserData extends UserData {
 	roomId: string;
+}
+
+export interface ServerUserData extends ClientUserData {
+	socketId: string;
 }
