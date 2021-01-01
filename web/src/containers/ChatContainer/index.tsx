@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import ChatList from "../../components/ChatList";
 import ChatForm from "../../components/ChatForm";
 import { SocketContext } from "../../context/SocketProvider";
-import { ChatData, ClientChatData } from "../../../../shared/models/chat.model";
+import { ClientChatData } from "../../../../shared/models/chat.model";
 import styles from "./index.module.css";
 import { UserContext } from "../../context/UserProvider";
 

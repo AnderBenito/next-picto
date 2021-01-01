@@ -4,7 +4,7 @@ const users: ServerUserData[] = [];
 export const joinUser = (user: ServerUserData) => {
 	if (!users.find((u) => u.socketId === user.socketId)) {
 		users.push(user);
-		console.log(users);
+		console.log("Total users: ", users);
 	}
 };
 

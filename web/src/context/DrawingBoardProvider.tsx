@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useRef, useState } from "react";
+import React, { createContext, useRef, useState } from "react";
 import { DrawData } from "../../../shared/models/draw.model";
 
 interface IDrawingContext {

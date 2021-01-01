@@ -19,6 +19,7 @@ export default (io: Server) => {
 			if (userData && userData.roomId) {
 				joinUser(newUserData);
 				socket.join(newUserData.roomId);
+				console.log("user joined");
 			}
 		});
 

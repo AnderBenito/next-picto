@@ -16,12 +16,8 @@ const SharedCanvasContainer: React.FC = () => {
 
 	useEffect(() => {
 		socket.on(DrawMsg.draw, draw);
-
 		socket.on(DrawMsg.draw_start, startDrawing);
-
 		socket.on(DrawMsg.draw_finish, finishDrawing);
-
-		return () => socket.close();
 	}, []);
 
 	const onMouseMove = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
