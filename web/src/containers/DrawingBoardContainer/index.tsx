@@ -12,8 +12,8 @@ const DrawingBoardContainer: React.FC<Props> = () => {
 		<div className={styles["container"]}>
 			<DrawingBoardProvider>
 				<div className={styles["board-container"]}>
-					<SharedBoardControlContainer />
 					<SharedCanvasContainer />
+					<SharedBoardControlContainer />
 				</div>
 			</DrawingBoardProvider>
 			<ChatContainer />

@@ -1,10 +1,11 @@
 .chat-list {
 	height: 100%;
-	min-width: 300px;
 }
 
 .chat-list ul {
-	background-color: tomato;
+	background-color: var(--white);
+	border-radius: 12px;
+	overflow: auto;
 	overflow-y: scroll;
 	height: 100%;
 	margin: 0px;

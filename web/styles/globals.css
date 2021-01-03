@@ -1,9 +1,22 @@
+:root {
+	/* CSS HEX */
+	--charcoal: #264653;
+	--persian-green: #2a9d8f;
+	--orange-yellow-crayola: #e9c46a;
+	--sandy-brown: #f4a261;
+	--burnt-sienna: #e76f51;
+	--white: #eff1f3;
+	--black: #252323;
+}
+
 html,
 body {
+	background-color: var(--white);
 	padding: 0;
 	margin: 0;
-	font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-		Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+	font-family: Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans,
+		Helvetica Neue, sans-serif;
+	color: var(--black);
 }
 
 a {
@@ -13,4 +26,5 @@ a {
 
 * {
 	box-sizing: border-box;
+	color: var(--black);
 }
