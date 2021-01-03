@@ -48,11 +48,19 @@ const SharedCanvasContainer: React.FC = () => {
 		socket.emit(DrawMsg.draw_finish);
 	};
 
+	const onMouseOut = () => {
+		if (!isDrawing) return;
+		setIsDrawing(false);
+		finishDrawing();
+		socket.emit(DrawMsg.draw_finish);
+	};
+
 	return (
 		<Canvas
 			onMouseDown={onMouseDown}
 			onMouseMove={onMouseMove}
 			onMouseUp={onMouseUp}
+			onMouseOut={onMouseOut}
 		/>
 	);
 };
