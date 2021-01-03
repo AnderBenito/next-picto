@@ -1,3 +1,5 @@
+import { createGame, deleteGame } from "./games";
+import { GameMsg } from "./../../../shared/messages/game.message";
 import {
 	ClientUserData,
 	ServerUserData,
@@ -27,6 +29,16 @@ export default (io: Server) => {
 			socket.leave(roomId);
 			leaveUser(roomId);
 			console.log("Leaved user");
+		});
+
+		socket.on(GameMsg.create, (roomId: string) => {
+			const games = createGame(roomId, socket.id);
+			console.log("Game created", games);
+		});
+
+		socket.on(GameMsg.delete, (roomId: string) => {
+			const games = deleteGame(roomId, socket.id);
+			console.log("Game deleted", games);
 		});
 
 		socket.on(ChatMsg.message, (msg: ChatData) => {
