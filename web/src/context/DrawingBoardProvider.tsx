@@ -61,10 +61,6 @@ export const DrawingBoardProvider: React.FC = (props) => {
 	const draw = (coordinates: DrawData) => {
 		if (!canvasContext.current) return;
 		const { x, y } = coordinates;
-		if (x > canvasContext.current.canvas.width) {
-			console.log("out of bound");
-			setIsDrawing(false);
-		}
 		canvasContext.current.lineTo(x, y);
 		canvasContext.current.stroke();
 	};

@@ -9,12 +9,13 @@ const Example: React.FC = () => {
 	const { query } = useRouter();
 
 	useEffect(() => {
-		if (!query.roomId) return;
-		joinRoom(query.roomId as string);
+		const roomId = query.roomId as string;
+		if (!roomId) return;
+		joinRoom(roomId);
 
 		return () => {
-			leaveRoom(query.roomId as string);
-			deleteGame(query.roomId as string);
+			leaveRoom(roomId);
+			deleteGame(roomId);
 		};
 	}, [query]);
 
