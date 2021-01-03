@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
+import { GameMsg } from "../../../shared/messages/game.message";
 import { RoomMsg } from "../../../shared/messages/room.message";
 import { ClientUserData } from "../../../shared/models/user.model";
 import { UserContext } from "./UserProvider";
@@ -13,6 +14,8 @@ interface ISocketContext {
 	setSocket: React.Dispatch<React.SetStateAction<Socket>>;
 	joinRoom: (roomId: string) => void;
 	leaveRoom: (roomId: string) => void;
+	createGame: (roomId: string) => void;
+	deleteGame: (roomId: string) => void;
 }
 
 export const SocketContext = createContext<ISocketContext>(
@@ -35,6 +38,14 @@ export const SocketProvider: React.FC<Props> = ({ url, children }) => {
 		socket.emit(RoomMsg.leave, roomId);
 	};
 
+	const createGame = (roomId: string) => {
+		socket.emit(GameMsg.create, roomId);
+	};
+
+	const deleteGame = (roomId: string) => {
+		socket.emit(GameMsg.delete, roomId);
+	};
+
 	useEffect(() => {
 		const socket = io(url);
 		setSocket(socket);
@@ -45,7 +56,9 @@ export const SocketProvider: React.FC<Props> = ({ url, children }) => {
 	}, []);
 
 	return (
-		<SocketContext.Provider value={{ socket, setSocket, joinRoom, leaveRoom }}>
+		<SocketContext.Provider
+			value={{ socket, setSocket, joinRoom, leaveRoom, createGame, deleteGame }}
+		>
 			{socket && children}
 		</SocketContext.Provider>
 	);
