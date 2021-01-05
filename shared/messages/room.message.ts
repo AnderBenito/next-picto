@@ -1,4 +1,4 @@
 export const RoomMsg = {
-	join: "join",
-	leave: "leave",
+	join: "room_join",
+	leave: "room_leave",
 };

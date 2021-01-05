@@ -1,8 +1,9 @@
 export interface GameData {
 	roomId: string;
 	host: string;
-	users: any[];
+	users: string[];
 	currentTurn: number;
 	totalTurns: number;
+	started: boolean;
 	finished: boolean;
 }
