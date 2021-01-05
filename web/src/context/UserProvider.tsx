@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import React, { createContext, useEffect, useState } from "react";
 import { UserData } from "../../../shared/models/user.model";
+import { v4 } from "uuid";
 
 interface IUserContext {
 	user: UserData;
@@ -10,6 +11,7 @@ interface IUserContext {
 
 const initialValues: UserData = {
 	username: "",
+	userId: v4(),
 };
 
 export const UserContext = createContext<IUserContext>({} as IUserContext);
