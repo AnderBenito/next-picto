@@ -12,10 +12,15 @@ interface Props {
 interface ISocketContext {
 	socket: Socket;
 	setSocket: React.Dispatch<React.SetStateAction<Socket>>;
-	joinRoom: (roomId: string) => void;
-	leaveRoom: (roomId: string) => void;
+	roomId: string;
+	setRoomId: React.Dispatch<React.SetStateAction<string>>;
+	joinRoom: () => void;
+	leaveRoom: () => void;
 	createGame: (roomId: string) => void;
 	deleteGame: (roomId: string) => void;
+	joinGame: () => void;
+	leaveGame: () => void;
+	startGame: () => void;
 }
 
 export const SocketContext = createContext<ISocketContext>(
@@ -24,27 +29,8 @@ export const SocketContext = createContext<ISocketContext>(
 
 export const SocketProvider: React.FC<Props> = ({ url, children }) => {
 	const [socket, setSocket] = useState<Socket>();
+	const [roomId, setRoomId] = useState<string>("");
 	const { user } = useContext(UserContext);
-
-	const joinRoom = (roomId: string) => {
-		const msg: ClientUserData = {
-			roomId,
-			username: user.username,
-		};
-		socket.emit(RoomMsg.join, msg);
-	};
-
-	const leaveRoom = (roomId: string) => {
-		socket.emit(RoomMsg.leave, roomId);
-	};
-
-	const createGame = (roomId: string) => {
-		socket.emit(GameMsg.create, roomId);
-	};
-
-	const deleteGame = (roomId: string) => {
-		socket.emit(GameMsg.delete, roomId);
-	};
 
 	useEffect(() => {
 		const socket = io(url);
@@ -55,9 +41,70 @@ export const SocketProvider: React.FC<Props> = ({ url, children }) => {
 		};
 	}, []);
 
+	useEffect(() => {
+		if (!roomId) return;
+		console.log("Joining to room with id", roomId);
+		joinRoom();
+		joinGame();
+
+		return () => {
+			leaveGame();
+			leaveRoom();
+		};
+	}, [roomId]);
+
+	const createMessage = (roomId: string) => {
+		const msg: ClientUserData = {
+			...user,
+			roomId,
+		};
+
+		return msg;
+	};
+
+	const joinRoom = () => {
+		socket.emit(RoomMsg.join, createMessage(roomId));
+	};
+
+	const leaveRoom = () => {
+		socket.emit(RoomMsg.leave, roomId);
+	};
+
+	const createGame = (roomId: string) => {
+		socket.emit(GameMsg.create, createMessage(roomId));
+	};
+
+	const joinGame = () => {
+		socket.emit(GameMsg.join, createMessage(roomId));
+	};
+
+	const leaveGame = () => {
+		socket.emit(GameMsg.leave, createMessage(roomId));
+	};
+
+	const deleteGame = (roomId: string) => {
+		socket.emit(GameMsg.delete, createMessage(roomId));
+	};
+
+	const startGame = () => {
+		socket.emit(GameMsg.start, createMessage(roomId));
+	};
+
 	return (
 		<SocketContext.Provider
-			value={{ socket, setSocket, joinRoom, leaveRoom, createGame, deleteGame }}
+			value={{
+				socket,
+				setSocket,
+				roomId,
+				setRoomId,
+				joinRoom,
+				leaveRoom,
+				createGame,
+				deleteGame,
+				joinGame,
+				leaveGame,
+				startGame,
+			}}
 		>
 			{socket && children}
 		</SocketContext.Provider>
