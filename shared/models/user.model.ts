@@ -1,5 +1,6 @@
 export interface UserData {
 	username: string;
+	userId: string;
 }
 
 export interface ClientUserData extends UserData {
