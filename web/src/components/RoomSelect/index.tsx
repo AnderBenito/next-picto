@@ -24,8 +24,18 @@ const RoomSelect: React.FC<Props> = ({
 	return (
 		<div className={styles["box-container"]}>
 			<div className={styles["select-button__container"]}>
-				<button onClick={() => setIsJoining(false)}>Create</button>
-				<button onClick={() => setIsJoining(true)}>Join</button>
+				<button
+					className={`${!isJoining && styles["active"]}`}
+					onClick={() => setIsJoining(false)}
+				>
+					Create
+				</button>
+				<button
+					className={`${isJoining && styles["active"]}`}
+					onClick={() => setIsJoining(true)}
+				>
+					Join
+				</button>
 			</div>
 			<section>
 				<label>Enter username:</label>
