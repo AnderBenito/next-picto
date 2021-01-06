@@ -1,6 +1,6 @@
 import DrawingBoardContainer from "../src/containers/DrawingBoardContainer";
-import HomeContainer from "../src/containers/HomeContainer";
+import HomeComponent from "../src/components/HomeComponent";
 
 export default function Home() {
-	return <HomeContainer />;
+	return <HomeComponent />;
 }

@@ -1,27 +1,20 @@
-.container {
-	height: 100vh;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-}
-
-.container h1 {
-	margin-top: 10rem;
-	font-size: 6rem;
-}
-
 .box-container {
 	border-radius: 18px;
 	color: white;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
-	padding: 2rem;
 	width: 100%;
 	max-width: 428px;
 	background-color: var(--persian-green);
 	-webkit-box-shadow: 0px 10px 9px -4px rgba(0, 0, 0, 0.3);
 	box-shadow: 0px 10px 9px -4px rgba(0, 0, 0, 0.3);
+}
+
+.box-container section {
+	display: flex;
+	flex-direction: column;
+	padding: 2rem;
 }
 
 .box-container input {
@@ -43,7 +36,39 @@
 	color: var(--charcoal);
 }
 
-.box-container button {
+.select-button__container {
+	display: flex;
+	justify-content: space-between;
+}
+
+.select-button__container button {
+	border: none;
+	width: 100%;
+	padding: 1rem;
+	font-size: 1.2rem;
+	font-weight: 600;
+	background: var(--black);
+	/* background: linear-gradient(
+		180deg,
+		var(--black) 0%,
+		rgba(38, 53, 59, 1) 64%,
+		rgba(38, 63, 73, 1) 87%,
+		rgba(38, 70, 83, 1) 100%
+	); */
+	color: var(--white);
+	cursor: pointer;
+	outline-width: 0;
+}
+
+.select-button__container button:nth-child(1) {
+	border-top-left-radius: 18px;
+}
+
+.select-button__container button:nth-child(2) {
+	border-top-right-radius: 18px;
+}
+
+.box-container .main-button {
 	background-color: var(--charcoal);
 	color: var(--white);
 	border: none;
