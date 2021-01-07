@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import DrawingBoardContainer from "../DrawingBoardContainer";
+import BoardContainer from "../BoardContainer";
 import Game from "../../../styles/Game.module.css";
 import GameEditorContainer from "../GameEditorContainer";
 import { GameManagerContext } from "../../context/GameManagerProvider";
@@ -8,7 +8,7 @@ const GameContainer: React.FC = () => {
 	const { started } = useContext(GameManagerContext);
 	return (
 		<div className={Game.container}>
-			{started ? <DrawingBoardContainer /> : <GameEditorContainer />}
+			{started ? <BoardContainer /> : <GameEditorContainer />}
 		</div>
 	);
 };

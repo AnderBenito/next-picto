@@ -7,7 +7,7 @@ import styles from "./index.module.css";
 
 interface Props {}
 
-const DrawingBoardContainer: React.FC<Props> = () => {
+const BoardContainer: React.FC<Props> = () => {
 	return (
 		<div className={styles["container"]}>
 			<DrawingBoardProvider>
@@ -16,9 +16,11 @@ const DrawingBoardContainer: React.FC<Props> = () => {
 					<SharedBoardControlContainer />
 				</div>
 			</DrawingBoardProvider>
-			<ChatContainer />
+			<div className={styles["chat-container"]}>
+				<ChatContainer />
+			</div>
 		</div>
 	);
 };
 
-export default DrawingBoardContainer;
+export default BoardContainer;

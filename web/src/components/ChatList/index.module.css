@@ -1,10 +1,8 @@
 .chat-list {
-	height: 100%;
-}
-
-.chat-list ul {
 	background-color: var(--white);
 	border-radius: 12px;
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
 	overflow: auto;
 	overflow-y: scroll;
 	height: 100%;
@@ -13,4 +11,22 @@
 	list-style: none;
 	display: flex;
 	flex-direction: column;
+}
+
+.chat-list::-webkit-scrollbar {
+	width: 8px;
+}
+
+.chat-list::-webkit-scrollbar-track {
+	background-color: var(--white);
+}
+
+.chat-list::-webkit-scrollbar-thumb {
+	background-color: var(--black);
+}
+
+.chat-list::-webkit-scrollbar-button {
+	width: 0;
+	height: 0;
+	display: none;
 }

@@ -11,8 +11,10 @@ const ChatMessage: React.FC<Props> = ({ message }) => {
 			className={`${styles["message"]}
 				${message.isMine ? styles["my-message"] : styles["other-message"]}`}
 		>
-			<strong>{message.username}:</strong>
-			{message.text}
+			<div>
+				<strong>{message.username}:</strong>
+				<p>{message.text}</p>
+			</div>
 		</li>
 	);
 };

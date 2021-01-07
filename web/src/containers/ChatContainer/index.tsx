@@ -6,7 +6,9 @@ import { ClientChatData } from "../../../../shared/models/chat.model";
 import styles from "./index.module.css";
 import { UserContext } from "../../context/UserProvider";
 
-const ChatContainer: React.FC = () => {
+const ChatContainer: React.FC<
+	React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+> = ({ ...props }) => {
 	const { user } = useContext(UserContext);
 	const { socket } = useContext(SocketContext);
 	const [message, setMessage] = useState<string>("");
@@ -39,7 +41,7 @@ const ChatContainer: React.FC = () => {
 	};
 
 	return (
-		<div className={styles["container"]}>
+		<div className={styles["container"]} {...props}>
 			<ChatList messageQueue={messageQueue} />
 			<ChatForm onChange={onChange} onSubmit={onSubmit} value={message} />
 		</div>

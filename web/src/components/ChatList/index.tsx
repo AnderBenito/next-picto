@@ -9,13 +9,11 @@ interface Props {
 
 const ChatList: React.FC<Props> = ({ messageQueue }) => {
 	return (
-		<div className={styles["chat-list"]}>
-			<ul>
-				{messageQueue.map((m, index) => (
-					<ChatMessage key={index} message={m} />
-				))}
-			</ul>
-		</div>
+		<ul className={styles["chat-list"]}>
+			{messageQueue.map((m, index) => (
+				<ChatMessage key={index} message={m} />
+			))}
+		</ul>
 	);
 };
 
