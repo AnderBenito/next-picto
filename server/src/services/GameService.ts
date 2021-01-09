@@ -1,9 +1,20 @@
+import { ClientUserData } from "../../../shared/models/user.model";
 import { GameData } from "./../../../shared/models/game.model";
 
 export default class GameService {
 	private static games: GameData[] = [];
 
-	static createGame(roomId: string, userId: string, totalTurns = 0) {
+	static getAllGames() {
+		return new Promise((resolve, reject) => {
+			if (!this.games) {
+				reject(new Error("No games found"));
+				return;
+			}
+			resolve(this.games);
+		});
+	}
+
+	static createGame({ roomId, userId }: ClientUserData, totalTurns = 0) {
 		const newGameData: GameData = {
 			roomId,
 			host: userId,
@@ -13,12 +24,20 @@ export default class GameService {
 			started: false,
 			finished: false,
 		};
-		this.games.push(newGameData);
 
-		return this.games;
+		return new Promise((resolve, reject) => {
+			if (this.games.findIndex((game) => game.roomId === roomId) !== -1) {
+				reject(new Error(`Game with roomId: ${roomId} is already created`));
+				return;
+			}
+
+			this.games.push(newGameData);
+
+			resolve(newGameData);
+		});
 	}
 
-	static joinGame(roomId: string, userId: string) {
+	static joinGame({ roomId, userId }: ClientUserData) {
 		const index = this.games.findIndex((game) => game.roomId === roomId);
 		if (index === -1) return this.games;
 		if (this.games[index].users.includes(userId)) return this.games;
@@ -28,7 +47,7 @@ export default class GameService {
 		return this.games;
 	}
 
-	static leaveGame(roomId: string, userId: string) {
+	static leaveGame({ roomId, userId }: ClientUserData) {
 		const index = this.games.findIndex((game) => game.roomId === roomId);
 		if (index === -1) return this.games;
 		const userIndex = this.games[index].users.findIndex(
@@ -40,7 +59,7 @@ export default class GameService {
 		return this.games;
 	}
 
-	static deleteGame(roomId: string, userId: string) {
+	static deleteGame({ roomId, userId }: ClientUserData) {
 		const index = this.games.findIndex((game) => game.roomId === roomId);
 		if (index === -1) return;
 		if (this.games[index].host !== userId) return;
@@ -49,7 +68,7 @@ export default class GameService {
 		return this.games;
 	}
 
-	static startGame(roomId: string, userId: string) {
+	static startGame({ roomId, userId }: ClientUserData) {
 		const index = this.games.findIndex((game) => game.roomId === roomId);
 		if (index === -1) return;
 		if (this.games[index].host !== userId) return;

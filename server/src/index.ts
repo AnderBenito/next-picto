@@ -1,9 +1,10 @@
 import express from "express";
 import http from "http";
-import { Server } from "socket.io";
 import corsConfig from "./config/corsConfig";
 import game from "./routes/game";
 import initSockets from "./sockets/initSockets";
+import { Server } from "socket.io";
+import cors from "cors";
 
 const main = async () => {
 	const app = express();
@@ -12,6 +13,7 @@ const main = async () => {
 		cors: corsConfig,
 	});
 
+	app.use(cors(corsConfig));
 	app.use(express.json());
 
 	initSockets(io);

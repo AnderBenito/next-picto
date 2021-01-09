@@ -13,14 +13,14 @@ router.get("/", (_, res) => {
 router.post("/create", (req, res) => {
 	const userData: ClientUserData = req.body.userData;
 
-	GameService.createGame(userData.roomId, userData.userId)
+	GameService.createGame(userData)
 		.then((game) => {
-			console.log(game);
+			console.log("Game Created", game);
 			res.status(200).send(game);
 		})
 		.catch((error) => {
 			console.error(error.message);
-			res.status(400).send(error.message);
+			res.status(400).send({ error: error.message });
 		});
 });
 
