@@ -1,8 +1,8 @@
 import React, { useContext, useEffect } from "react";
-import Canvas from "../../components/Canvas";
-import { DrawingBoardContext } from "../../context/DrawingBoardProvider";
-import { SocketContext } from "../../context/SocketProvider";
-import { DrawMsg } from "../../../../shared/messages/draw.message";
+import Canvas from "../components/Atoms/Canvas";
+import { BoardContext } from "../context/BoardProvider";
+import { SocketContext } from "../context/SocketProvider";
+import { DrawMsg } from "../../../shared/messages/draw.message";
 const SharedCanvasContainer: React.FC = () => {
 	const {
 		draw,
@@ -11,7 +11,7 @@ const SharedCanvasContainer: React.FC = () => {
 		isDrawing,
 		setIsDrawing,
 		drawSettings,
-	} = useContext(DrawingBoardContext);
+	} = useContext(BoardContext);
 	const { socket } = useContext(SocketContext);
 
 	useEffect(() => {

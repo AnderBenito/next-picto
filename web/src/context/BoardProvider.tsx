@@ -1,7 +1,7 @@
 import React, { createContext, useRef, useState } from "react";
 import { DrawData } from "../../../shared/models/draw.model";
 
-interface IDrawingContext {
+interface IBoardContext {
 	isDrawing: boolean;
 	setIsDrawing: React.Dispatch<React.SetStateAction<boolean>>;
 	canvasContext: React.MutableRefObject<CanvasRenderingContext2D>;
@@ -21,11 +21,9 @@ interface IDrawingContext {
 	clearCanvas: () => void;
 }
 
-export const DrawingBoardContext = createContext<IDrawingContext>(
-	{} as IDrawingContext
-);
+export const BoardContext = createContext<IBoardContext>({} as IBoardContext);
 
-export const DrawingBoardProvider: React.FC = (props) => {
+export const BoardProvider: React.FC = (props) => {
 	const canvasContext = useRef<CanvasRenderingContext2D>();
 	const [isDrawing, setIsDrawing] = useState<boolean>(false);
 	const [drawSettings, setDrawSettings] = useState({
@@ -66,7 +64,7 @@ export const DrawingBoardProvider: React.FC = (props) => {
 	};
 
 	return (
-		<DrawingBoardContext.Provider
+		<BoardContext.Provider
 			value={{
 				isDrawing,
 				setIsDrawing,
@@ -80,6 +78,6 @@ export const DrawingBoardProvider: React.FC = (props) => {
 			}}
 		>
 			{props.children}
-		</DrawingBoardContext.Provider>
+		</BoardContext.Provider>
 	);
 };

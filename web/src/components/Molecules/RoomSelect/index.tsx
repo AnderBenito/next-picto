@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { UserData } from "../../../../shared/models/user.model";
-import styles from "../../../styles/RoomSelect.module.css";
+import { UserData } from "../../../../../shared/models/user.model";
+import styles from "./index.module.css";
 
 interface Props {
 	user: UserData;

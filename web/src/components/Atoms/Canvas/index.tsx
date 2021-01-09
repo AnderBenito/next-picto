@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef } from "react";
-import { DrawingBoardContext } from "../../context/DrawingBoardProvider";
+import { BoardContext } from "../../../context/BoardProvider";
 import styles from "./index.module.css";
 
 interface Props {
@@ -18,7 +18,7 @@ const Canvas: React.FC<Props> = ({
 	const sketchRef = useRef<HTMLCanvasElement>();
 	const parentRef = useRef<HTMLDivElement>(null);
 
-	const { canvasContext } = useContext(DrawingBoardContext);
+	const { canvasContext } = useContext(BoardContext);
 
 	const resizeCanvas = () => {
 		canvasContext.current.canvas.width = parentRef.current.getBoundingClientRect().width;

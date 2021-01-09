@@ -1,9 +1,9 @@
 import React, { useContext, useState } from "react";
 import { useRouter } from "next/router";
-import { UserContext } from "../../context/UserProvider";
+import { UserContext } from "../context/UserProvider";
 import { nanoid } from "nanoid";
-import { SocketContext } from "../../context/SocketProvider";
-import RoomSelect from "../../components/RoomSelect";
+import { SocketContext } from "../context/SocketProvider";
+import RoomSelect from "../components/Molecules/RoomSelect";
 
 const RoomSelectContainer: React.FC = () => {
 	const [joinedRoomId, setJoinedRoomId] = useState<string>("");

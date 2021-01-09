@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
-import ChatList from "../../components/ChatList";
-import ChatForm from "../../components/ChatForm";
-import { SocketContext } from "../../context/SocketProvider";
-import { ClientChatData } from "../../../../shared/models/chat.model";
-import styles from "./index.module.css";
-import { UserContext } from "../../context/UserProvider";
+import ChatList from "../components/Molecules/ChatList";
+import ChatForm from "../components/Molecules/ChatForm";
+import { SocketContext } from "../context/SocketProvider";
+import { ClientChatData } from "../../../shared/models/chat.model";
+import { UserContext } from "../context/UserProvider";
+import Chat from "../components/Organisms/Chat";
 
 const ChatContainer: React.FC<
 	React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
-> = ({ ...props }) => {
+> = () => {
 	const { user } = useContext(UserContext);
 	const { socket } = useContext(SocketContext);
 	const [message, setMessage] = useState<string>("");
@@ -41,10 +41,12 @@ const ChatContainer: React.FC<
 	};
 
 	return (
-		<div className={styles["container"]} {...props}>
-			<ChatList messageQueue={messageQueue} />
-			<ChatForm onChange={onChange} onSubmit={onSubmit} value={message} />
-		</div>
+		<Chat
+			messageQueue={messageQueue}
+			message={message}
+			onChange={onChange}
+			onSubmit={onSubmit}
+		/>
 	);
 };
 

@@ -1,12 +1,12 @@
 import React, { useContext, useEffect } from "react";
-import { DrawMsg } from "../../../../shared/messages/draw.message";
-import BoardControl from "../../components/BoardControl";
-import { DrawingBoardContext } from "../../context/DrawingBoardProvider";
-import { SocketContext } from "../../context/SocketProvider";
+import { DrawMsg } from "../../../shared/messages/draw.message";
+import BoardControl from "../components/Molecules/BoardControl";
+import { BoardContext } from "../context/BoardProvider";
+import { SocketContext } from "../context/SocketProvider";
 
 const SharedBoardControlContainer: React.FC = () => {
 	const { clearCanvas, setDrawSettings, drawSettings } = useContext(
-		DrawingBoardContext
+		BoardContext
 	);
 	const { socket } = useContext(SocketContext);
 

@@ -1,6 +1,6 @@
 import React from "react";
-import { ClientChatData } from "../../../../shared/models/chat.model";
-import ChatMessage from "../ChatMessage";
+import { ClientChatData } from "../../../../../shared/models/chat.model";
+import ChatMessage from "../../Atoms/ChatMessage";
 import styles from "./index.module.css";
 
 interface Props {

@@ -4,8 +4,8 @@ import { GameData } from "../../../shared/models/game.model";
 import { SocketContext } from "./SocketProvider";
 
 interface IGameManagerContext {
-	started: boolean;
-	startGame: () => void;
+	isStarted: boolean;
+	onStartGame: () => void;
 }
 
 export const GameManagerContext = createContext<IGameManagerContext>(
@@ -13,8 +13,8 @@ export const GameManagerContext = createContext<IGameManagerContext>(
 );
 
 export const GameManagerProvider: React.FC = ({ children }) => {
-	const [started, setStarted] = useState<boolean>(false);
-	const { socket, startGame: _startGame } = useContext(SocketContext);
+	const [isStarted, setIsStarted] = useState<boolean>(false);
+	const { socket, startGame } = useContext(SocketContext);
 
 	useEffect(() => {
 		socket.on(GameMsg.start, (msg: GameData) => {
@@ -22,12 +22,12 @@ export const GameManagerProvider: React.FC = ({ children }) => {
 		});
 	}, []);
 
-	const startGame = () => {
-		setStarted(true);
+	const onStartGame = () => {
+		setIsStarted(true);
 	};
 
 	return (
-		<GameManagerContext.Provider value={{ started, startGame }}>
+		<GameManagerContext.Provider value={{ isStarted, onStartGame }}>
 			{children}
 		</GameManagerContext.Provider>
 	);
