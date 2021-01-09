@@ -1,10 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
-import ChatList from "../components/Molecules/ChatList";
-import ChatForm from "../components/Molecules/ChatForm";
 import { SocketContext } from "../context/SocketProvider";
 import { ClientChatData } from "../../../shared/models/chat.model";
 import { UserContext } from "../context/UserProvider";
 import Chat from "../components/Organisms/Chat";
+import { ChatMsg } from "../../../shared/messages/chat.message";
 
 const ChatContainer: React.FC<
 	React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
@@ -15,7 +14,7 @@ const ChatContainer: React.FC<
 	const [messageQueue, setMessageQueue] = useState<ClientChatData[]>([]);
 
 	useEffect(() => {
-		socket.on("message", (msg: any) => {
+		socket.on(ChatMsg.message, (msg: any) => {
 			console.log("Message received", msg);
 			const newMsg: ClientChatData = {
 				...msg,
@@ -23,6 +22,10 @@ const ChatContainer: React.FC<
 			};
 			setMessageQueue((prev) => [...prev, newMsg]);
 		});
+
+		return () => {
+			socket.off(ChatMsg.message);
+		};
 	}, []);
 
 	const onChange = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -35,7 +38,7 @@ const ChatContainer: React.FC<
 			username: user.username,
 			isMine: true,
 		};
-		socket.emit("message", msg);
+		socket.emit(ChatMsg.message, msg);
 		setMessageQueue((prev) => [...prev, msg]);
 		setMessage("");
 	};

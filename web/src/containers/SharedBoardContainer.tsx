@@ -17,6 +17,10 @@ const SharedBoardControlContainer: React.FC = () => {
 
 	useEffect(() => {
 		socket.on(DrawMsg.canvas_clear, clearCanvas);
+
+		return () => {
+			socket.off(DrawMsg.canvas_clear);
+		};
 	}, []);
 
 	return (
