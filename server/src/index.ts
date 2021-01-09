@@ -2,7 +2,7 @@ import express from "express";
 import http from "http";
 import { Server } from "socket.io";
 import corsConfig from "./config/corsConfig";
-import initSockets from "./utils/initSockets";
+import initSockets from "./sockets/initSockets";
 
 const main = async () => {
 	const app = express();

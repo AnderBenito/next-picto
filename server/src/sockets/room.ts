@@ -1,11 +1,11 @@
-import { ChatMsg } from "./../../../../shared/messages/chat.message";
+import { Socket } from "socket.io";
+import UserService from "../services/UserService";
+import { ChatMsg } from "../../../shared/messages/chat.message";
 import {
 	ClientUserData,
 	ServerUserData,
-} from "./../../../../shared/models/user.model";
-import { joinUser, leaveUser } from "./../users";
-import { RoomMsg } from "./../../../../shared/messages/room.message";
-import { Socket } from "socket.io";
+} from "../../../shared/models/user.model";
+import { RoomMsg } from "../../../shared/messages/room.message";
 
 export default (socket: Socket) => {
 	socket.on(RoomMsg.join, (userData: ClientUserData) => {
@@ -22,15 +22,15 @@ export default (socket: Socket) => {
 				username: "Next Picto",
 			});
 
-			joinUser(newUserData);
+			const users = UserService.joinUser(newUserData);
 			socket.join(newUserData.roomId);
-			console.log("user joined");
+			console.log("user joined", users);
 		}
 	});
 
 	socket.on(RoomMsg.leave, (roomId: string) => {
+		const users = UserService.leaveUser(roomId);
 		socket.leave(roomId);
-		leaveUser(roomId);
-		console.log("Leaved user");
+		console.log("Leaved user", users);
 	});
 };
