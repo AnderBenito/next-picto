@@ -6,31 +6,44 @@ import { GameMsg } from "../../../shared/messages/game.message";
 
 const GameContainer: React.FC = () => {
 	const { roomId, joinGame, leaveGame, socket } = useContext(SocketContext);
-	const { isStarted } = useContext(GameManagerContext);
-	const [error, setError] = useState<boolean>(false);
+	const { gameData, setGameData } = useContext(GameManagerContext);
+	const [error, setError] = useState<string>("");
 	const [loading, setLoading] = useState<boolean>(true);
 
 	useEffect(() => {
-		if (!roomId) return;
-		joinGame();
+		socket.on(GameMsg.start, (msg) => {
+			console.log("Game data", msg);
+			setGameData(msg);
+		});
 
 		socket.on(GameMsg.join, (msg) => {
-			console.log(msg);
 			if (msg.error) {
-				setError(true);
+				setError(msg.error);
+			} else {
+				console.log("Game joined succesfully, game data =>", msg);
+				setGameData(msg);
 			}
 			setLoading(false);
 		});
 
 		return () => {
-			leaveGame();
 			socket.off(GameMsg.join);
+			socket.off(GameMsg.start);
+		};
+	}, []);
+
+	useEffect(() => {
+		if (!roomId) return;
+		joinGame();
+
+		return () => {
+			leaveGame();
 		};
 	}, [roomId]);
 
-	if (error) return <p>Error joining game xd</p>;
+	if (error) return <p>Error: {error}</p>;
 	else if (loading) return <p>Loading...</p>;
-	return <Game isStarted={isStarted} />;
+	return <Game isStarted={gameData.started} />;
 };
 
 export default GameContainer;
