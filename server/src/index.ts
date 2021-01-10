@@ -18,7 +18,7 @@ const main = async () => {
 
 	initSockets(io);
 
-	app.use("/game", game);
+	app.use("/game", game());
 
 	const PORT = 5000 || process.env.PORT;
 
