@@ -4,6 +4,10 @@ import { GameData } from "./../../../shared/models/game.model";
 export default class GameService {
 	private static games: GameData[] = [];
 
+	private static doGameExists(roomId: string) {
+		return this.games.findIndex((game) => game.roomId === roomId) !== -1;
+	}
+
 	static getAllGames() {
 		return new Promise<GameData[]>((resolve, reject) => {
 			if (!this.games) {
@@ -26,7 +30,7 @@ export default class GameService {
 		};
 
 		return new Promise<GameData>((resolve, reject) => {
-			if (this.games.findIndex((game) => game.roomId === roomId) !== -1) {
+			if (this.doGameExists(roomId)) {
 				reject(new Error(`Game with roomId: ${roomId} is already created`));
 				return;
 			}
