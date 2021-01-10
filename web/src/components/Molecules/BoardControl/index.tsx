@@ -23,7 +23,9 @@ const BoardControl: React.FC<Props> = ({
 	return (
 		<div className={styles["container"]}>
 			<input
-				type="number"
+				type="range"
+				min="5"
+				max="50"
 				onChange={(e) =>
 					setDrawSettings({
 						...drawSettings,
