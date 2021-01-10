@@ -3,6 +3,5 @@ export interface ChatData {
 }
 
 export interface ClientChatData extends ChatData {
-	username: string;
 	isMine: boolean;
 }
