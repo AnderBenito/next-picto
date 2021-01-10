@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { GameMsg } from "../../../shared/messages/game.message";
-import { RoomMsg } from "../../../shared/messages/room.message";
 import { ClientUserData } from "../../../shared/models/user.model";
 import { UserContext } from "./UserProvider";
 
@@ -14,11 +13,10 @@ interface ISocketContext {
 	setSocket: React.Dispatch<React.SetStateAction<Socket>>;
 	roomId: string;
 	setRoomId: React.Dispatch<React.SetStateAction<string>>;
-	joinRoom: () => void;
-	leaveRoom: () => void;
-	createGame: (roomId: string) => void;
-	deleteGame: (roomId: string) => void;
+	createMessage: (roomId: string) => ClientUserData;
+	createGame: (roomId: string) => Promise<Response>;
 	joinGame: () => void;
+	deleteGame: (roomId: string) => void;
 	leaveGame: () => void;
 	startGame: () => void;
 }
@@ -41,18 +39,6 @@ export const SocketProvider: React.FC<Props> = ({ url, children }) => {
 		};
 	}, []);
 
-	useEffect(() => {
-		if (!roomId) return;
-		console.log("Joining to room with id", roomId);
-		joinRoom();
-		joinGame();
-
-		return () => {
-			leaveGame();
-			leaveRoom();
-		};
-	}, [roomId]);
-
 	const createMessage = (roomId: string) => {
 		const msg: ClientUserData = {
 			...user,
@@ -62,16 +48,20 @@ export const SocketProvider: React.FC<Props> = ({ url, children }) => {
 		return msg;
 	};
 
-	const joinRoom = () => {
-		socket.emit(RoomMsg.join, createMessage(roomId));
-	};
-
-	const leaveRoom = () => {
-		socket.emit(RoomMsg.leave, roomId);
-	};
-
 	const createGame = (roomId: string) => {
-		socket.emit(GameMsg.create, createMessage(roomId));
+		// socket.emit(GameMsg.create, createMessage(roomId));
+		return fetch("http://localhost:5000/game/create", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Accept: "application/json",
+			},
+			body: JSON.stringify({ userData: createMessage(roomId) }),
+		});
+	};
+
+	const deleteGame = (roomId: string) => {
+		socket.emit(GameMsg.delete, createMessage(roomId));
 	};
 
 	const joinGame = () => {
@@ -80,10 +70,6 @@ export const SocketProvider: React.FC<Props> = ({ url, children }) => {
 
 	const leaveGame = () => {
 		socket.emit(GameMsg.leave, createMessage(roomId));
-	};
-
-	const deleteGame = (roomId: string) => {
-		socket.emit(GameMsg.delete, createMessage(roomId));
 	};
 
 	const startGame = () => {
@@ -97,8 +83,7 @@ export const SocketProvider: React.FC<Props> = ({ url, children }) => {
 				setSocket,
 				roomId,
 				setRoomId,
-				joinRoom,
-				leaveRoom,
+				createMessage,
 				createGame,
 				deleteGame,
 				joinGame,

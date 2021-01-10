@@ -1,5 +1,5 @@
 import React, { createContext, useRef, useState } from "react";
-import { DrawData } from "../../../shared/models/draw.model";
+import { DrawData, SocketDrawData } from "../../../shared/models/draw.model";
 
 interface IBoardContext {
 	isDrawing: boolean;
@@ -15,9 +15,9 @@ interface IBoardContext {
 			width: number;
 		}>
 	>;
-	startDrawing: (msg: DrawData) => any;
+	startDrawing: (drawData: DrawData) => void;
+	draw: (drawData: DrawData) => void;
 	finishDrawing: () => any;
-	draw: (msg: DrawData) => any;
 	clearCanvas: () => void;
 }
 
@@ -40,9 +40,9 @@ export const BoardProvider: React.FC = (props) => {
 		);
 	};
 
-	const startDrawing = (msg: DrawData) => {
+	const startDrawing = (drawData: DrawData) => {
 		if (!canvasContext.current) return;
-		const { x, y, color, width } = msg;
+		const { x, y, color, width } = drawData;
 		canvasContext.current.strokeStyle = color || drawSettings.color;
 		canvasContext.current.lineWidth = width || drawSettings.width;
 		canvasContext.current.lineCap = "round";
@@ -56,9 +56,9 @@ export const BoardProvider: React.FC = (props) => {
 		canvasContext.current.closePath();
 	};
 
-	const draw = (coordinates: DrawData) => {
+	const draw = (drawData: DrawData) => {
 		if (!canvasContext.current) return;
-		const { x, y } = coordinates;
+		const { x, y } = drawData;
 		canvasContext.current.lineTo(x, y);
 		canvasContext.current.stroke();
 	};

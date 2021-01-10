@@ -7,16 +7,25 @@ import RoomSelect from "../components/Molecules/RoomSelect";
 
 const RoomSelectContainer: React.FC = () => {
 	const [joinedRoomId, setJoinedRoomId] = useState<string>("");
+	const [error, setError] = useState<boolean>(false);
 	const { user, setUser, saveUserData } = useContext(UserContext);
 	const { createGame } = useContext(SocketContext);
 	const router = useRouter();
 
 	const onCreate = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-		const roomId = nanoid(8);
+		// const roomId = nanoid(8);
+		const roomId = "abc123";
 		saveUserData();
-		createGame(roomId);
-		console.log("Game created");
-		router.push(`/${roomId}`);
+		createGame(roomId).then(async (res) => {
+			const data = await res.json();
+			console.log(data, res.status);
+			if (res.status === 400) {
+				setError(true);
+				return;
+			}
+			console.log("Game created");
+			router.push(`/${roomId}`);
+		});
 	};
 
 	const onJoin = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -43,6 +52,7 @@ const RoomSelectContainer: React.FC = () => {
 			joinedRoomId={joinedRoomId}
 			handleUsername={handleUsername}
 			handleJoinedRoomId={handleJoinedRoomId}
+			error={error}
 		/>
 	);
 };

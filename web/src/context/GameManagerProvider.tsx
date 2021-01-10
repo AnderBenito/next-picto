@@ -14,6 +14,7 @@ export const GameManagerContext = createContext<IGameManagerContext>(
 
 export const GameManagerProvider: React.FC = ({ children }) => {
 	const [isStarted, setIsStarted] = useState<boolean>(false);
+	const [gameData, setGameData] = useState<GameData>();
 	const { socket, startGame } = useContext(SocketContext);
 
 	useEffect(() => {

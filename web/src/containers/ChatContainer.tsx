@@ -1,24 +1,28 @@
 import React, { useContext, useEffect, useState } from "react";
 import { SocketContext } from "../context/SocketProvider";
 import { ClientChatData } from "../../../shared/models/chat.model";
-import { UserContext } from "../context/UserProvider";
 import Chat from "../components/Organisms/Chat";
 import { ChatMsg } from "../../../shared/messages/chat.message";
+import { SocketData } from "../../../shared/models/socket.model";
 
 const ChatContainer: React.FC<
 	React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>
 > = () => {
-	const { user } = useContext(UserContext);
-	const { socket } = useContext(SocketContext);
+	const { socket, createMessage, roomId } = useContext(SocketContext);
 	const [message, setMessage] = useState<string>("");
-	const [messageQueue, setMessageQueue] = useState<ClientChatData[]>([]);
+	const [messageQueue, setMessageQueue] = useState<
+		SocketData<ClientChatData>[]
+	>([]);
 
 	useEffect(() => {
-		socket.on(ChatMsg.message, (msg: any) => {
+		socket.on(ChatMsg.message, (msg: SocketData<ClientChatData>) => {
 			console.log("Message received", msg);
-			const newMsg: ClientChatData = {
+			const newMsg: SocketData<ClientChatData> = {
 				...msg,
-				isMine: false,
+				msgData: {
+					...msg.msgData,
+					isMine: false,
+				},
 			};
 			setMessageQueue((prev) => [...prev, newMsg]);
 		});
@@ -33,10 +37,12 @@ const ChatContainer: React.FC<
 
 	const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		const msg: ClientChatData = {
-			text: message,
-			username: user.username,
-			isMine: true,
+		const msg: SocketData<ClientChatData> = {
+			userData: createMessage(roomId),
+			msgData: {
+				isMine: true,
+				text: message,
+			},
 		};
 		socket.emit(ChatMsg.message, msg);
 		setMessageQueue((prev) => [...prev, msg]);

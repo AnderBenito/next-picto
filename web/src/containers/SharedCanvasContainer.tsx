@@ -3,6 +3,8 @@ import Canvas from "../components/Atoms/Canvas";
 import { BoardContext } from "../context/BoardProvider";
 import { SocketContext } from "../context/SocketProvider";
 import { DrawMsg } from "../../../shared/messages/draw.message";
+import { DrawData } from "../../../shared/models/draw.model";
+import { SocketData } from "../../../shared/models/socket.model";
 const SharedCanvasContainer: React.FC = () => {
 	const {
 		draw,
@@ -12,11 +14,13 @@ const SharedCanvasContainer: React.FC = () => {
 		setIsDrawing,
 		drawSettings,
 	} = useContext(BoardContext);
-	const { socket } = useContext(SocketContext);
+	const { socket, createMessage, roomId } = useContext(SocketContext);
 
 	useEffect(() => {
-		socket.on(DrawMsg.draw, draw);
-		socket.on(DrawMsg.draw_start, startDrawing);
+		socket.on(DrawMsg.draw, (msg: SocketData<DrawData>) => draw(msg.msgData));
+		socket.on(DrawMsg.draw_start, (msg: SocketData<DrawData>) =>
+			startDrawing(msg.msgData)
+		);
 		socket.on(DrawMsg.draw_finish, finishDrawing);
 
 		return () => {
@@ -29,36 +33,73 @@ const SharedCanvasContainer: React.FC = () => {
 	const onMouseMove = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
 		if (!isDrawing) return;
 		const { offsetX, offsetY } = e.nativeEvent;
-		draw({ x: offsetX, y: offsetY });
-		socket.emit(DrawMsg.draw, {
+		const msgData: DrawData = {
 			x: offsetX,
 			y: offsetY,
-		});
+		};
+		draw(msgData);
+
+		//Emit message
+		const msg: SocketData<DrawData> = {
+			userData: createMessage(roomId),
+			msgData,
+		};
+		socket.emit(DrawMsg.draw, msg);
 	};
 
 	const onMouseDown = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
 		const { offsetX, offsetY } = e.nativeEvent;
-		setIsDrawing(true);
-		startDrawing({ x: offsetX, y: offsetY });
-		socket.emit(DrawMsg.draw_start, {
+		const msgData: DrawData = {
 			x: offsetX,
 			y: offsetY,
 			color: drawSettings.color,
 			width: drawSettings.width,
-		});
+		};
+		setIsDrawing(true);
+		startDrawing(msgData);
+
+		//Emit message
+		const msg: SocketData<DrawData> = {
+			userData: createMessage(roomId),
+			msgData,
+		};
+		socket.emit(DrawMsg.draw_start, msg);
 	};
 
-	const onMouseUp = () => {
+	const onMouseUp = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+		const { offsetX, offsetY } = e.nativeEvent;
+		const msgData: DrawData = {
+			x: offsetX,
+			y: offsetY,
+		};
+
 		setIsDrawing(false);
 		finishDrawing();
-		socket.emit(DrawMsg.draw_finish);
+
+		//Emit message
+		const msg: SocketData<DrawData> = {
+			userData: createMessage(roomId),
+			msgData,
+		};
+		socket.emit(DrawMsg.draw_finish, msg);
 	};
 
-	const onMouseOut = () => {
+	const onMouseOut = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+		const { offsetX, offsetY } = e.nativeEvent;
+		const msgData: DrawData = {
+			x: offsetX,
+			y: offsetY,
+		};
 		if (!isDrawing) return;
 		setIsDrawing(false);
 		finishDrawing();
-		socket.emit(DrawMsg.draw_finish);
+
+		//Emit message
+		const msg: SocketData<DrawData> = {
+			userData: createMessage(roomId),
+			msgData,
+		};
+		socket.emit(DrawMsg.draw_finish, msg);
 	};
 
 	return (

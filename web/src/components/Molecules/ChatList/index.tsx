@@ -1,10 +1,11 @@
 import React from "react";
 import { ClientChatData } from "../../../../../shared/models/chat.model";
+import { SocketData } from "../../../../../shared/models/socket.model";
 import ChatMessage from "../../Atoms/ChatMessage";
 import styles from "./index.module.css";
 
 interface Props {
-	messageQueue: ClientChatData[];
+	messageQueue: SocketData<ClientChatData>[];
 }
 
 const ChatList: React.FC<Props> = ({ messageQueue }) => {

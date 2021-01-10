@@ -1,19 +1,20 @@
 import React from "react";
 import { ClientChatData } from "../../../../../shared/models/chat.model";
+import { SocketData } from "../../../../../shared/models/socket.model";
 import styles from "./index.module.css";
 
 interface Props {
-	message: ClientChatData;
+	message: SocketData<ClientChatData>;
 }
 const ChatMessage: React.FC<Props> = ({ message }) => {
 	return (
 		<li
 			className={`${styles["message"]}
-				${message.isMine ? styles["my-message"] : styles["other-message"]}`}
+				${message.msgData.isMine ? styles["my-message"] : styles["other-message"]}`}
 		>
 			<div>
-				<strong>{message.username}:</strong>
-				<p>{message.text}</p>
+				<strong>{message.userData.username}:</strong>
+				<p>{message.msgData.text}</p>
 			</div>
 		</li>
 	);
