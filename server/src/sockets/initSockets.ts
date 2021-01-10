@@ -15,15 +15,16 @@ export default (io: Server) => {
 
 		socket.on("disconnect", () => {
 			console.log("Closed connection with ", socket.id);
-			UserService.removeUserBySocketId(socket.id).then((user) => {
-				console.log("Removing user", user);
-				GameService.leaveGame({
-					roomId: user.roomId,
-					userId: user.userId,
-					username: user.username,
-				});
-			});
-			// UserService.removeUser(socket.id);
+			UserService.removeUserBySocketId(socket.id)
+				.then((user) => {
+					console.log("Removing user", user);
+					GameService.leaveGame({
+						roomId: user.roomId,
+						userId: user.userId,
+						username: user.username,
+					});
+				})
+				.catch((error) => console.error(error));
 		});
 	});
 };
