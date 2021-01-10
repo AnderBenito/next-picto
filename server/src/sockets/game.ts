@@ -23,7 +23,7 @@ function emitWelcomeMessage(socket: Socket, userData: ClientUserData) {
 	socket.emit(ChatMsg.message, msg);
 
 	msg.msgData.text = `${userData.username} has joined the room`;
-	socket.broadcast.emit(ChatMsg.message, msg);
+	socket.broadcast.to(userData.roomId).emit(ChatMsg.message, msg);
 }
 
 export default (socket: Socket) => {
@@ -71,10 +71,24 @@ export default (socket: Socket) => {
 			.then((game) => {
 				console.log("Game started");
 				socket.emit(GameMsg.start, game);
+				socket.broadcast.to(userData.roomId).emit(GameMsg.start, game);
 			})
 			.catch((error) => {
 				console.error(error);
 				socket.emit(GameMsg.start, { error: error.message });
+			});
+	});
+
+	socket.on(GameMsg.finishTurn, (userData: ClientUserData) => {
+		GameService.finishTurn(userData)
+			.then((game) => {
+				console.log("Turn finished by", userData.username);
+				socket.emit(GameMsg.finishTurn, game);
+				socket.broadcast.to(userData.roomId).emit(GameMsg.start, game);
+			})
+			.catch((error) => {
+				console.error(error);
+				socket.emit(GameMsg.finishTurn, { error: error.message });
 			});
 	});
 
