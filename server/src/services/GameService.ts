@@ -23,6 +23,8 @@ export default class GameService {
 			roomId,
 			host: userId,
 			users: [],
+			turnOf: "",
+			turnIndex: 0,
 			currentTurn: 0,
 			totalTurns,
 			started: false,
@@ -112,8 +114,34 @@ export default class GameService {
 				return;
 			}
 
+			//Start game and select user turn
 			this.games[index].started = true;
+			this.games[index].turnOf = this.games[index].users[
+				this.games[index].turnIndex
+			];
+
 			resolve(this.games[index]);
+		});
+	}
+
+	static finishTurn({ roomId }: ClientUserData) {
+		return new Promise<GameData>((resolve, reject) => {
+			const index = this.games.findIndex((game) => game.roomId === roomId);
+			if (index === -1) {
+				reject(new Error(`Game with roomId: ${roomId} not found`));
+				return;
+			}
+
+			let game = this.games[index];
+
+			if (game.turnIndex >= game.users.length - 1) {
+				game.turnIndex = 0;
+			} else {
+				game.turnIndex++;
+			}
+
+			game.turnOf = game.users[game.turnIndex];
+			resolve(game);
 		});
 	}
 }
