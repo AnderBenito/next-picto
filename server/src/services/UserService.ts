@@ -1,36 +1,39 @@
-import { ServerUserData } from "./../../../shared/models/user.model";
+import { ServerUserData } from "../../../shared/models/user.model";
 
 export default class UserService {
 	private static users: ServerUserData[] = [];
 
-	static joinUser(user: ServerUserData) {
-		if (!this.users.find((u) => u.socketId === user.socketId)) {
-			this.users.push(user);
-		}
-		return this.users;
+	public static saveUser(data: ServerUserData) {
+		return new Promise<ServerUserData>((resolve, reject) => {
+			if (this.users.findIndex((user) => user.userId === data.userId) !== -1) {
+				reject(new Error(`User with id: ${data.userId} already registered`));
+				return;
+			}
+
+			if (
+				this.users.findIndex((user) => user.socketId === data.socketId) !== -1
+			) {
+				reject(
+					new Error(`Socket with id: ${data.socketId} already registered`)
+				);
+				return;
+			}
+
+			this.users.push(data);
+			resolve(data);
+		});
 	}
 
-	static leaveUser(roomId: string) {
-		const index = this.users.findIndex((u) => u.roomId === roomId);
-		if (index === -1) return;
-		this.users.splice(index, 1);
+	public static removeUserBySocketId(socketId: string) {
+		return new Promise<ServerUserData>((resolve, reject) => {
+			const index = this.users.findIndex((user) => user.socketId === socketId);
+			if (index === -1) {
+				reject(new Error(`Socket with id: ${socketId} not found`));
+				return;
+			}
 
-		return this.users;
-	}
-
-	static removeUser(socketId: string) {
-		const index = this.users.findIndex((u) => u.socketId === socketId);
-		if (index === -1) return;
-		this.users.splice(index, 1);
-
-		return this.users;
-	}
-
-	static getUserById(userId: string) {
-		const user = this.users.find((u) => u.socketId === userId);
-
-		if (!user) throw new Error("User not found");
-
-		return user;
+			const user = this.users.splice(index, 1);
+			resolve(user[0]);
+		});
 	}
 }
