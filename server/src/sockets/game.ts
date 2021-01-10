@@ -7,33 +7,47 @@ import { ClientChatData } from "../../../shared/models/chat.model";
 import GameService from "../services/GameService";
 import UserService from "../services/UserService";
 
+function emitWelcomeMessage(socket: Socket, userData: ClientUserData) {
+	const msg: SocketData<ClientChatData> = {
+		userData: {
+			roomId: userData.roomId,
+			userId: "bootId",
+			username: "Next Picto",
+		},
+		msgData: {
+			isMine: false,
+			text: `Welcome to room ${userData.roomId}`,
+		},
+	};
+
+	socket.emit(ChatMsg.message, msg);
+
+	msg.msgData.text = `${userData.username} has joined the room`;
+	socket.broadcast.emit(ChatMsg.message, msg);
+}
+
 export default (socket: Socket) => {
 	socket.on(GameMsg.join, (userData: ClientUserData) => {
 		GameService.joinGame(userData)
 			.then((game) => {
-				console.log("Game joined", game);
-				socket.join(userData.roomId);
-				socket.emit(GameMsg.join, game);
-
 				UserService.saveUser({
 					...userData,
 					socketId: socket.id,
-				}).then((user) => console.log("USER REGISTERED", user));
-
-				const msg: SocketData<ClientChatData> = {
-					userData: {
-						roomId: userData.roomId,
-						userId: "bootId",
-						username: "Next Picto",
-					},
-					msgData: {
-						isMine: false,
-						text: `Welcome to room ${userData.roomId}`,
-					},
-				};
-				socket.emit(ChatMsg.message, msg);
+				})
+					.then((user) => {
+						console.log("Game joined", game);
+						console.log("USER REGISTERED", user);
+						socket.join(userData.roomId);
+						socket.emit(GameMsg.join, game);
+						emitWelcomeMessage(socket, userData);
+					})
+					.catch((error) => {
+						console.error(error.message);
+						socket.emit(GameMsg.join, { error: error.message });
+					});
 			})
 			.catch((error) => {
+				console.error(error.message);
 				socket.emit(GameMsg.join, { error: error.message });
 			});
 	});
@@ -53,9 +67,15 @@ export default (socket: Socket) => {
 	});
 
 	socket.on(GameMsg.start, (userData: ClientUserData) => {
-		const game = GameService.startGame(userData);
-		console.log("Game started", game);
-		socket.broadcast.to(userData.roomId).emit(GameMsg.start, game);
+		GameService.startGame(userData)
+			.then((game) => {
+				console.log("Game started");
+				socket.emit(GameMsg.start, game);
+			})
+			.catch((error) => {
+				console.error(error);
+				socket.emit(GameMsg.start, { error: error.message });
+			});
 	});
 
 	return socket;
