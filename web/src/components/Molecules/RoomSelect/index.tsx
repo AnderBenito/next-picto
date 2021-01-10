@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { UserData } from "../../../../../shared/models/user.model";
 import styles from "./index.module.css";
 
@@ -8,8 +8,8 @@ interface Props {
 	error: boolean;
 	handleUsername: (event: React.ChangeEvent<HTMLInputElement>) => void;
 	handleJoinedRoomId: (event: React.ChangeEvent<HTMLInputElement>) => void;
-	onCreate: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-	onJoin: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+	onCreate: (event: React.FormEvent<HTMLFormElement>) => void;
+	onJoin: (event: React.FormEvent<HTMLFormElement>) => void;
 }
 
 const RoomSelect: React.FC<Props> = ({
@@ -40,7 +40,7 @@ const RoomSelect: React.FC<Props> = ({
 						Join
 					</button>
 				</div>
-				<section>
+				<form onSubmit={isJoining ? onJoin : onCreate}>
 					<label>Enter username:</label>
 					<input
 						type="text"
@@ -51,6 +51,7 @@ const RoomSelect: React.FC<Props> = ({
 						<>
 							<label>Enter room code:</label>
 							<input
+								autoFocus={true}
 								type="text"
 								value={joinedRoomId}
 								onChange={handleJoinedRoomId}
@@ -58,13 +59,13 @@ const RoomSelect: React.FC<Props> = ({
 						</>
 					)}
 					<button
+						type="submit"
 						disabled={!user.username}
-						onClick={isJoining ? onJoin : onCreate}
 						className={styles["main-button"]}
 					>
 						{isJoining ? "Join Room" : "Create Room"}
 					</button>
-				</section>
+				</form>
 			</div>
 			{error && <p>Error creating game</p>}
 		</>
