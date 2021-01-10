@@ -1,15 +1,10 @@
-import UserService from "../services/UserService";
 import { Socket } from "socket.io";
 import { ChatMsg } from "../../../shared/messages/chat.message";
-import { ChatData } from "../../../shared/models/chat.model";
+import { ClientChatData } from "../../../shared/models/chat.model";
+import { SocketData } from "../../../shared/models/socket.model";
 
 export default (socket: Socket) => {
-	socket.on(ChatMsg.message, (msg: ChatData) => {
-		const user = UserService.getUserById(socket.id);
-		const newMsg = {
-			...msg,
-			username: user.username,
-		};
-		socket.broadcast.to(user.roomId).emit(ChatMsg.message, newMsg);
+	socket.on(ChatMsg.message, (msg: SocketData<ClientChatData>) => {
+		socket.broadcast.to(msg.userData.roomId).emit(ChatMsg.message, msg);
 	});
 };

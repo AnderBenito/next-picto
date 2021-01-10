@@ -1,29 +1,55 @@
 import { Socket } from "socket.io";
-import GameService from "../services/GameService";
 import { GameMsg } from "../../../shared/messages/game.message";
 import { ClientUserData } from "../../../shared/models/user.model";
+import { ChatMsg } from "../../../shared/messages/chat.message";
+import { SocketData } from "../../../shared/models/socket.model";
+import { ClientChatData } from "../../../shared/models/chat.model";
+import GameService from "../services/GameService";
+import UserService from "../services/UserService";
 
 export default (socket: Socket) => {
-	socket.on(GameMsg.create, (userData: ClientUserData) => {
-		console.log(userData);
-		const games = GameService.createGame(userData);
-		console.log("Game created", games);
-	});
-
-	socket.on(GameMsg.delete, (userData: ClientUserData) => {
-		const games = GameService.deleteGame(userData);
-		console.log("Game deleted", games);
-	});
-
 	socket.on(GameMsg.join, (userData: ClientUserData) => {
-		console.log(userData);
-		const games = GameService.joinGame(userData);
-		console.log("Game joined", games);
+		GameService.joinGame(userData)
+			.then((game) => {
+				console.log("Game joined", game);
+				socket.join(userData.roomId);
+				socket.emit(GameMsg.join, game);
+
+				UserService.saveUser({
+					...userData,
+					socketId: socket.id,
+				}).then((user) => console.log("USER REGISTERED", user));
+
+				const msg: SocketData<ClientChatData> = {
+					userData: {
+						roomId: userData.roomId,
+						userId: "bootId",
+						username: "Next Picto",
+					},
+					msgData: {
+						isMine: false,
+						text: `Welcome to room ${userData.roomId}`,
+					},
+				};
+				socket.emit(ChatMsg.message, msg);
+			})
+			.catch((error) => {
+				socket.emit(GameMsg.join, { error: error.message });
+			});
 	});
 
 	socket.on(GameMsg.leave, (userData: ClientUserData) => {
-		const games = GameService.leaveGame(userData);
-		console.log("Game leaved", games);
+		GameService.leaveGame(userData)
+			.then((game) => {
+				console.log("LEAVING GAME", game);
+				socket.emit(GameMsg.leave, game);
+				socket.leave(userData.roomId);
+
+				UserService.removeUserBySocketId(socket.id);
+			})
+			.catch((error) => {
+				socket.emit(GameMsg.leave, { error: error.message });
+			});
 	});
 
 	socket.on(GameMsg.start, (userData: ClientUserData) => {
@@ -31,4 +57,6 @@ export default (socket: Socket) => {
 		console.log("Game started", game);
 		socket.broadcast.to(userData.roomId).emit(GameMsg.start, game);
 	});
+
+	return socket;
 };
