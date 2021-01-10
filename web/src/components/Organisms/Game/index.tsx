@@ -1,5 +1,6 @@
 import React from "react";
 import GameEditorContainer from "../../../containers/GameEditorContainer";
+import TimerContainer from "../../../containers/TimerContainer";
 import Panel from "../Panel";
 import styles from "./index.module.css";
 
@@ -10,7 +11,14 @@ interface Props {
 const Game: React.FC<Props> = ({ isStarted }) => {
 	return (
 		<div className={styles["container"]}>
-			{isStarted ? <Panel /> : <GameEditorContainer />}
+			{isStarted ? (
+				<>
+					<TimerContainer />
+					<Panel />
+				</>
+			) : (
+				<GameEditorContainer />
+			)}
 		</div>
 	);
 };

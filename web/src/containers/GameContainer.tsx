@@ -26,6 +26,15 @@ const GameContainer: React.FC = () => {
 			setLoading(false);
 		});
 
+		socket.on(GameMsg.finishTurn, (msg) => {
+			if (msg.error) {
+				setError(msg.error);
+			} else {
+				console.log("Turn finished, new game data =>", msg);
+				setGameData(msg);
+			}
+		});
+
 		return () => {
 			socket.off(GameMsg.join);
 			socket.off(GameMsg.start);
