@@ -6,15 +6,18 @@ import { SocketContext } from "../context/SocketProvider";
 import RoomSelect from "../components/Molecules/RoomSelect";
 
 const RoomSelectContainer: React.FC = () => {
-	const [joinedRoomId, setJoinedRoomId] = useState<string>("");
-	const [error, setError] = useState<boolean>(false);
 	const { user, setUser, saveUserData } = useContext(UserContext);
 	const { createGame } = useContext(SocketContext);
+
+	const [joinedRoomId, setJoinedRoomId] = useState<string>("");
+	const [error, setError] = useState<boolean>(false);
+
 	const router = useRouter();
 
-	const onCreate = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-		// const roomId = nanoid(8);
-		const roomId = "abc123";
+	const onCreate = (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
+		const roomId = nanoid(8);
+
 		saveUserData();
 		createGame(roomId).then(async (res) => {
 			const data = await res.json();
@@ -28,7 +31,8 @@ const RoomSelectContainer: React.FC = () => {
 		});
 	};
 
-	const onJoin = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+	const onJoin = (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
 		saveUserData();
 		router.push(`/${joinedRoomId}`);
 	};

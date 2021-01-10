@@ -61,7 +61,7 @@ export const SocketProvider: React.FC<Props> = ({ url, children }) => {
 	};
 
 	const deleteGame = (roomId: string) => {
-		socket.emit(GameMsg.delete, createMessage(roomId));
+		// socket.emit(GameMsg.delete, createMessage(roomId));
 	};
 
 	const joinGame = () => {

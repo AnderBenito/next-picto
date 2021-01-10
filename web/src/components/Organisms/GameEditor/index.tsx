@@ -4,12 +4,17 @@ import styles from "./index.module.css";
 
 interface Props {
 	onStartGame: any;
+	isUserHost: boolean;
 }
 
-const GameEditor: React.FC<Props> = ({ onStartGame }) => {
+const GameEditor: React.FC<Props> = ({ onStartGame, isUserHost }) => {
 	return (
 		<div className={styles["container"]}>
-			<button className={styles["main-button"]} onClick={onStartGame}>
+			<button
+				className={styles["main-button"]}
+				onClick={onStartGame}
+				disabled={!isUserHost}
+			>
 				Start Game
 			</button>
 			<div className={styles["chat-container"]}>
