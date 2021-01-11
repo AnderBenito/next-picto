@@ -5,6 +5,7 @@ import { SocketContext } from "../context/SocketProvider";
 import { DrawMsg } from "../../../shared/messages/draw.message";
 import { DrawData } from "../../../shared/models/draw.model";
 import { SocketData } from "../../../shared/models/socket.model";
+import { GameManagerContext } from "../context/GameManagerProvider";
 const SharedCanvasContainer: React.FC = () => {
 	const {
 		draw,
@@ -14,6 +15,7 @@ const SharedCanvasContainer: React.FC = () => {
 		setIsDrawing,
 		drawSettings,
 	} = useContext(BoardContext);
+	const { isMyTurn } = useContext(GameManagerContext);
 	const { socket, createMessage, roomId } = useContext(SocketContext);
 
 	useEffect(() => {
@@ -31,6 +33,7 @@ const SharedCanvasContainer: React.FC = () => {
 	}, []);
 
 	const onMouseMove = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+		if (!isMyTurn()) return;
 		if (!isDrawing) return;
 		const { offsetX, offsetY } = e.nativeEvent;
 		const msgData: DrawData = {
@@ -48,6 +51,7 @@ const SharedCanvasContainer: React.FC = () => {
 	};
 
 	const onMouseDown = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+		if (!isMyTurn()) return;
 		const { offsetX, offsetY } = e.nativeEvent;
 		const msgData: DrawData = {
 			x: offsetX,
@@ -67,6 +71,7 @@ const SharedCanvasContainer: React.FC = () => {
 	};
 
 	const onMouseUp = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+		if (!isMyTurn()) return;
 		const { offsetX, offsetY } = e.nativeEvent;
 		const msgData: DrawData = {
 			x: offsetX,
