@@ -1,5 +1,5 @@
 import React, { createContext, useRef, useState } from "react";
-import { DrawData, SocketDrawData } from "../../../shared/models/draw.model";
+import { DrawData } from "../../../shared/models/draw.model";
 
 interface IBoardContext {
 	isDrawing: boolean;
@@ -24,14 +24,15 @@ interface IBoardContext {
 export const BoardContext = createContext<IBoardContext>({} as IBoardContext);
 
 export const BoardProvider: React.FC = (props) => {
-	const canvasContext = useRef<CanvasRenderingContext2D>();
 	const [isDrawing, setIsDrawing] = useState<boolean>(false);
 	const [drawSettings, setDrawSettings] = useState({
 		color: "#000",
 		width: 5,
 	});
+	const canvasContext = useRef<CanvasRenderingContext2D>();
 
 	const clearCanvas = () => {
+		if (!canvasContext.current) return;
 		canvasContext.current.clearRect(
 			0,
 			0,

@@ -6,14 +6,12 @@ import Board from "../Board";
 import styles from "./index.module.css";
 
 const Panel: React.FC = () => {
-	const { isMyTurn } = useContext(GameManagerContext);
 	return (
 		<div className={styles["container"]}>
 			<Board />
 			<div className={styles["chat-container"]}>
 				<ChatContainer />
 			</div>
-			{!isMyTurn() && <div>IM DISABLED</div>}
 		</div>
 	);
 };

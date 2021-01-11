@@ -1,24 +1,16 @@
-import React from "react";
-import GameEditorContainer from "../../../containers/GameEditorContainer";
+import React, { useContext } from "react";
 import TimerContainer from "../../../containers/TimerContainer";
+import { GameManagerContext } from "../../../context/GameManagerProvider";
 import Panel from "../Panel";
 import styles from "./index.module.css";
 
-interface Props {
-	isStarted: boolean;
-}
-
-const Game: React.FC<Props> = ({ isStarted }) => {
+const Game = () => {
+	const { isMyTurn } = useContext(GameManagerContext);
 	return (
 		<div className={styles["container"]}>
-			{isStarted ? (
-				<>
-					<TimerContainer />
-					<Panel />
-				</>
-			) : (
-				<GameEditorContainer />
-			)}
+			<TimerContainer />
+			<Panel />
+			{!isMyTurn() && <div>IM DISABLED</div>}
 		</div>
 	);
 };

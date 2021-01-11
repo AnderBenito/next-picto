@@ -3,7 +3,7 @@ import { GameMsg } from "../../../shared/messages/game.message";
 import { GameManagerContext } from "../context/GameManagerProvider";
 import { SocketContext } from "../context/SocketProvider";
 
-const TIMEOUT_TOTAL = 5;
+const TIMEOUT_TOTAL = 10;
 
 const TimerContainer: React.FC = () => {
 	const { gameData, isMyTurn } = useContext(GameManagerContext);

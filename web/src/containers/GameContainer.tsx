@@ -1,58 +1,25 @@
-import React, { useContext, useEffect, useState } from "react";
-import { GameManagerContext } from "../context/GameManagerProvider";
-import Game from "../components/Organisms/Game";
-import { SocketContext } from "../context/SocketProvider";
+import React, { useContext, useEffect } from "react";
 import { GameMsg } from "../../../shared/messages/game.message";
+import Game from "../components/Organisms/Game";
+import { GameManagerContext } from "../context/GameManagerProvider";
+import { SocketContext } from "../context/SocketProvider";
 
 const GameContainer: React.FC = () => {
-	const { roomId, joinGame, leaveGame, socket } = useContext(SocketContext);
-	const { gameData, setGameData } = useContext(GameManagerContext);
-	const [error, setError] = useState<string>("");
-	const [loading, setLoading] = useState<boolean>(true);
-
+	const { socket } = useContext(SocketContext);
+	const { setGameData } = useContext(GameManagerContext);
 	useEffect(() => {
-		socket.on(GameMsg.start, (msg) => {
-			console.log("Game data", msg);
-			setGameData(msg);
-		});
-
-		socket.on(GameMsg.join, (msg) => {
-			if (msg.error) {
-				setError(msg.error);
-			} else {
-				console.log("Game joined succesfully, game data =>", msg);
-				setGameData(msg);
-			}
-			setLoading(false);
-		});
-
 		socket.on(GameMsg.finishTurn, (msg) => {
-			if (msg.error) {
-				setError(msg.error);
-			} else {
+			if (!msg.error) {
 				console.log("Turn finished, new game data =>", msg);
 				setGameData(msg);
 			}
 		});
 
 		return () => {
-			socket.off(GameMsg.join);
-			socket.off(GameMsg.start);
+			socket.off(GameMsg.finishTurn);
 		};
 	}, []);
-
-	useEffect(() => {
-		if (!roomId) return;
-		joinGame();
-
-		return () => {
-			leaveGame();
-		};
-	}, [roomId]);
-
-	if (error) return <p>Error: {error}</p>;
-	else if (loading) return <p>Loading...</p>;
-	return <Game isStarted={gameData.started} />;
+	return <Game />;
 };
 
 export default GameContainer;

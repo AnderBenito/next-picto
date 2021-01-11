@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import React, { useContext, useEffect } from "react";
-import GameContainer from "../src/containers/GameContainer";
+import GameRoomContainer from "../src/containers/GameRoomContainer";
 import { GameManagerProvider } from "../src/context/GameManagerProvider";
 import { SocketContext } from "../src/context/SocketProvider";
 
@@ -20,7 +20,7 @@ const Example: React.FC = () => {
 
 	return (
 		<GameManagerProvider>
-			<GameContainer />
+			<GameRoomContainer />
 		</GameManagerProvider>
 	);
 };
