@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { GameMsg } from "../../../shared/messages/game.message";
+import Timer from "../components/Atoms/Timer";
 import { GameManagerContext } from "../context/GameManagerProvider";
 import { SocketContext } from "../context/SocketProvider";
 
@@ -38,7 +39,7 @@ const TimerContainer: React.FC = () => {
 		countDown();
 	}, [timer]);
 
-	return <div>Timer: {timer}</div>;
+	return <Timer timer={timer} />;
 };
 
 export default TimerContainer;
