@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import GuessWordContainer from "../../../containers/GuessWordContainer";
 import TimerContainer from "../../../containers/TimerContainer";
 import { GameManagerContext } from "../../../context/GameManagerProvider";
 import Panel from "../Panel";
@@ -9,6 +10,7 @@ const Game = () => {
 	return (
 		<div className={styles["container"]}>
 			<TimerContainer />
+			<GuessWordContainer />
 			<Panel />
 			{!isMyTurn() && <div>IM DISABLED</div>}
 		</div>
