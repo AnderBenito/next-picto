@@ -8,4 +8,5 @@ export interface GameData {
 	totalTurns: number;
 	started: boolean;
 	finished: boolean;
+	guessWord?: string;
 }
