@@ -1,3 +1,4 @@
+import getRandomWord from "../utils/getRandomWord";
 import { ClientUserData } from "../../../shared/models/user.model";
 import { GameData } from "./../../../shared/models/game.model";
 
@@ -18,7 +19,7 @@ export default class GameService {
 		});
 	}
 
-	static createGame({ roomId, userId }: ClientUserData, totalTurns = 0) {
+	static createGame({ roomId, userId }: ClientUserData, totalTurns = 5) {
 		const newGameData: GameData = {
 			roomId,
 			host: userId,
@@ -29,6 +30,7 @@ export default class GameService {
 			totalTurns,
 			started: false,
 			finished: false,
+			guessWord: "",
 		};
 
 		return new Promise<GameData>((resolve, reject) => {
@@ -115,12 +117,12 @@ export default class GameService {
 			}
 
 			//Start game and select user turn
-			this.games[index].started = true;
-			this.games[index].turnOf = this.games[index].users[
-				this.games[index].turnIndex
-			];
+			const game = this.games[index];
+			game.guessWord = getRandomWord();
+			game.started = true;
+			game.turnOf = game.users[game.turnIndex];
 
-			resolve(this.games[index]);
+			resolve(game);
 		});
 	}
 
@@ -132,16 +134,26 @@ export default class GameService {
 				return;
 			}
 
-			let game = this.games[index];
+			const game = this.games[index];
+			this.increaseTurn(game);
 
-			if (game.turnIndex >= game.users.length - 1) {
-				game.turnIndex = 0;
-			} else {
-				game.turnIndex++;
-			}
-
-			game.turnOf = game.users[game.turnIndex];
 			resolve(game);
 		});
+	}
+
+	private static increaseTurn(game: GameData) {
+		if (game.turnIndex >= game.users.length - 1) {
+			game.turnIndex = 0;
+			if (game.currentTurn >= game.totalTurns) {
+				game.finished = true;
+			} else {
+				game.currentTurn++;
+			}
+		} else {
+			game.turnIndex++;
+		}
+		game.guessWord = getRandomWord();
+
+		game.turnOf = game.users[game.turnIndex];
 	}
 }
