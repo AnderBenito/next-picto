@@ -1,5 +1,6 @@
 import React from "react";
 import ChatContainer from "../../../containers/ChatContainer";
+import UserListContainer from "../../../containers/UserListContainer";
 import styles from "./index.module.css";
 
 interface Props {
@@ -20,7 +21,7 @@ const GameEditor: React.FC<Props> = ({ onStartGame, isUserHost }) => {
 			<div className={styles["chat-container"]}>
 				<ChatContainer />
 			</div>
-			<p>Users</p>
+			<UserListContainer />
 		</div>
 	);
 };

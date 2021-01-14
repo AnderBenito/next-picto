@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import GuessWordContainer from "../../../containers/GuessWordContainer";
 import TimerContainer from "../../../containers/TimerContainer";
+import UserListContainer from "../../../containers/UserListContainer";
 import { GameManagerContext } from "../../../context/GameManagerProvider";
 import Panel from "../Panel";
 import styles from "./index.module.css";
@@ -12,6 +13,7 @@ const Game = () => {
 			<TimerContainer />
 			<GuessWordContainer />
 			<Panel />
+			<UserListContainer />
 			{!isMyTurn() && <div>IM DISABLED</div>}
 		</div>
 	);

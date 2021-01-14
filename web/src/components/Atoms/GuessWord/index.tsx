@@ -12,12 +12,6 @@ const GuessWord: React.FC<Props> = ({ guessWord, isMyTurn }) => {
 		let hiddenWord = "";
 		for (let word of words) {
 			hiddenWord = hiddenWord.concat(hiddenSymbol.repeat(word.length), " ");
-			console.log(
-				hiddenSymbol,
-				word.length,
-				hiddenSymbol.repeat(word.length),
-				hiddenWord
-			);
 		}
 
 		return hiddenWord;
