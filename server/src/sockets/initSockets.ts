@@ -4,6 +4,8 @@ import chat from "./chat";
 import game from "./game";
 import UserService from "../services/UserService";
 import GameService from "../services/GameService";
+import { emitByeMessage } from "../utils/emitMessages";
+import { GameMsg } from "../../../shared/messages/game.message";
 
 export default (io: Server) => {
 	io.on("connection", (socket: Socket) => {
@@ -18,13 +20,19 @@ export default (io: Server) => {
 			UserService.removeUserBySocketId(socket.id)
 				.then((user) => {
 					console.log("Removing user", user);
-					GameService.leaveGame({
+					const clientUserData = {
 						roomId: user.roomId,
 						userId: user.userId,
 						username: user.username,
+					};
+					GameService.leaveGame(clientUserData).then((game) => {
+						//Broadcast game data
+						socket.broadcast.to(game.roomId).emit(GameMsg.leave, game);
+						//Emit bye message
+						emitByeMessage(socket, clientUserData);
 					});
 				})
-				.catch((error) => console.error(error));
+				.catch(() => console.error("User does not exist"));
 		});
 	});
 };
