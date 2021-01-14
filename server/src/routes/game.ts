@@ -19,7 +19,6 @@ export default function game() {
 				res.status(200).send(game);
 			})
 			.catch((error) => {
-				console.error(error.message);
 				res.status(400).send({ error: error.message });
 			});
 	});

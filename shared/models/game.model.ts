@@ -1,7 +1,9 @@
+import { ClientUserData } from "./user.model";
+
 export interface GameData {
 	roomId: string;
 	host: string;
-	users: string[];
+	users: ClientUserData[];
 	turnOf: string;
 	turnIndex: number;
 	currentTurn: number;
@@ -9,4 +11,8 @@ export interface GameData {
 	started: boolean;
 	finished: boolean;
 	guessWord?: string;
+}
+
+export interface TimerData {
+	timerValue: number;
 }

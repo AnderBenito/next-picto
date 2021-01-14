@@ -45,43 +45,43 @@ export default class GameService {
 		});
 	}
 
-	static joinGame({ roomId, userId }: ClientUserData) {
+	static joinGame(userData: ClientUserData) {
 		return new Promise<GameData>((resolve, reject) => {
-			const index = this.games.findIndex((game) => game.roomId === roomId);
+			const game = this.games.find((game) => game.roomId === userData.roomId);
 
-			if (index === -1) {
-				reject(new Error(`Game with roomId: ${roomId} not found`));
+			if (!game) {
+				reject(new Error(`Game with roomId: ${userData.roomId} not found`));
 				return;
 			}
 
-			if (this.games[index].users.includes(userId)) {
-				reject(new Error(`User with id ${userId} is already in game`));
+			if (game.users.includes(userData)) {
+				reject(new Error(`User with id ${userData.userId} is already in game`));
 				return;
 			}
 
-			this.games[index].users.push(userId);
-			resolve(this.games[index]);
+			game.users.push(userData);
+			resolve(game);
 		});
 	}
 
-	static leaveGame({ roomId, userId }: ClientUserData) {
+	static leaveGame(userData: ClientUserData) {
 		return new Promise<GameData>((resolve, reject) => {
-			const index = this.games.findIndex((game) => game.roomId === roomId);
-			if (index === -1) {
-				reject(new Error(`Game with roomId: ${roomId} not found`));
+			const game = this.games.find((game) => game.roomId === userData.roomId);
+			if (!game) {
+				reject(new Error(`Game with roomId: ${userData.roomId} not found`));
 				return;
 			}
 
-			const userIndex = this.games[index].users.findIndex(
-				(user) => user === userId
+			const userIndex = game.users.findIndex(
+				(user) => user.userId === userData.userId
 			);
 			if (userIndex === -1) {
-				reject(new Error(`User with id ${userId} not found in game`));
+				reject(new Error(`User with id ${userData.userId} not found in game`));
 				return;
 			}
 
-			this.games[index].users.splice(userIndex, 1);
-			resolve(this.games[index]);
+			game.users.splice(userIndex, 1);
+			resolve(game);
 		});
 	}
 
@@ -105,22 +105,21 @@ export default class GameService {
 
 	static startGame({ roomId, userId, username }: ClientUserData) {
 		return new Promise<GameData>((resolve, reject) => {
-			const index = this.games.findIndex((game) => game.roomId === roomId);
-			if (index === -1) {
+			const game = this.games.find((game) => game.roomId === roomId);
+			if (!game) {
 				reject(new Error(`Game with roomId: ${roomId} not found`));
 				return;
 			}
 
-			if (this.games[index].host !== userId) {
+			if (game.host !== userId) {
 				reject(new Error(`User ${username} is not HOST`));
 				return;
 			}
 
 			//Start game and select user turn
-			const game = this.games[index];
 			game.guessWord = getRandomWord();
 			game.started = true;
-			game.turnOf = game.users[game.turnIndex];
+			game.turnOf = game.users[game.turnIndex].userId;
 
 			resolve(game);
 		});
@@ -128,15 +127,13 @@ export default class GameService {
 
 	static finishTurn({ roomId }: ClientUserData) {
 		return new Promise<GameData>((resolve, reject) => {
-			const index = this.games.findIndex((game) => game.roomId === roomId);
-			if (index === -1) {
+			const game = this.games.find((game) => game.roomId === roomId);
+			if (!game) {
 				reject(new Error(`Game with roomId: ${roomId} not found`));
 				return;
 			}
 
-			const game = this.games[index];
 			this.increaseTurn(game);
-
 			resolve(game);
 		});
 	}
@@ -154,6 +151,6 @@ export default class GameService {
 		}
 		game.guessWord = getRandomWord();
 
-		game.turnOf = game.users[game.turnIndex];
+		game.turnOf = game.users[game.turnIndex].userId;
 	}
 }
