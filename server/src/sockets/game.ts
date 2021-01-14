@@ -1,52 +1,45 @@
 import { Socket } from "socket.io";
 import { GameMsg } from "../../../shared/messages/game.message";
 import { ClientUserData } from "../../../shared/models/user.model";
-import { ChatMsg } from "../../../shared/messages/chat.message";
 import { SocketData } from "../../../shared/models/socket.model";
-import { ClientChatData } from "../../../shared/models/chat.model";
 import GameService from "../services/GameService";
 import UserService from "../services/UserService";
-
-function emitWelcomeMessage(socket: Socket, userData: ClientUserData) {
-	const msg: SocketData<ClientChatData> = {
-		userData: {
-			roomId: userData.roomId,
-			userId: "bootId",
-			username: "Next Picto",
-		},
-		msgData: {
-			isMine: false,
-			text: `Welcome to room ${userData.roomId}`,
-		},
-	};
-
-	socket.emit(ChatMsg.message, msg);
-
-	msg.msgData.text = `${userData.username} has joined the room`;
-	socket.broadcast.to(userData.roomId).emit(ChatMsg.message, msg);
-}
+import { TimerData } from "../../../shared/models/game.model";
+import { emitWelcomeMessage } from "../utils/emitMessages";
 
 export default (socket: Socket) => {
+	//User join listener
 	socket.on(GameMsg.join, (userData: ClientUserData) => {
+		//Join incomming user to the game
 		GameService.joinGame(userData)
 			.then((game) => {
+				//If joins correctly, save it to the users Array
 				UserService.saveUser({
 					...userData,
 					socketId: socket.id,
 				})
-					.then((user) => {
+					.then(() => {
+						//Emit welcome message
 						console.log("Game joined", game);
-						console.log("USER REGISTERED", user);
+
+						//Join socket to roomID
 						socket.join(userData.roomId);
+
+						//Emit game data to all users
 						socket.emit(GameMsg.join, game);
+						socket.broadcast.to(game.roomId).emit(GameMsg.join, game);
+
+						//Emit welcome message
 						emitWelcomeMessage(socket, userData);
 					})
 					.catch((error) => {
+						//Emit error
 						console.error(error.message);
 						socket.emit(GameMsg.join, { error: error.message });
 					});
 			})
 			.catch((error) => {
+				//Emit error
 				console.error(error.message);
 				socket.emit(GameMsg.join, { error: error.message });
 			});
@@ -84,12 +77,18 @@ export default (socket: Socket) => {
 			.then((game) => {
 				console.log("Turn finished by", userData.username);
 				socket.emit(GameMsg.finishTurn, game);
-				socket.broadcast.to(userData.roomId).emit(GameMsg.start, game);
+				socket.broadcast.to(userData.roomId).emit(GameMsg.finishTurn, game);
 			})
 			.catch((error) => {
 				console.error(error);
 				socket.emit(GameMsg.finishTurn, { error: error.message });
 			});
+	});
+
+	socket.on(GameMsg.tickTimer, (timerData: SocketData<TimerData>) => {
+		socket.broadcast
+			.to(timerData.userData.roomId)
+			.emit(GameMsg.tickTimer, timerData);
 	});
 
 	return socket;
