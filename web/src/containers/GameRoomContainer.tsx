@@ -26,7 +26,14 @@ const GameRoomContainer: React.FC = () => {
 			setLoading(false);
 		});
 
+		socket.on(GameMsg.leave, (msg) => {
+			console.log("Someone leaved", msg);
+			if (!msg) return;
+			setGameData(msg);
+		});
+
 		return () => {
+			socket.off(GameMsg.leave);
 			socket.off(GameMsg.join);
 			socket.off(GameMsg.start);
 		};
