@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { SocketContext } from "../context/SocketProvider";
 import { ClientChatData } from "../../../shared/models/chat.model";
 import Chat from "../components/Organisms/Chat";
@@ -14,6 +14,8 @@ const ChatContainer: React.FC<
 		SocketData<ClientChatData>[]
 	>([]);
 
+	const elementToFocus = useRef<HTMLDivElement>();
+
 	useEffect(() => {
 		socket.on(ChatMsg.message, (msg: SocketData<ClientChatData>) => {
 			console.log("Message received", msg);
@@ -25,6 +27,7 @@ const ChatContainer: React.FC<
 				},
 			};
 			setMessageQueue((prev) => [...prev, newMsg]);
+			elementToFocus.current.scrollIntoView({ behavior: "smooth" });
 		});
 
 		return () => {
@@ -46,11 +49,13 @@ const ChatContainer: React.FC<
 		};
 		socket.emit(ChatMsg.message, msg);
 		setMessageQueue((prev) => [...prev, msg]);
+		elementToFocus.current.scrollIntoView({ behavior: "smooth" });
 		setMessage("");
 	};
 
 	return (
 		<Chat
+			elementToFocus={elementToFocus}
 			messageQueue={messageQueue}
 			message={message}
 			onChange={onChange}
