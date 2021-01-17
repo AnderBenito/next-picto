@@ -58,8 +58,9 @@ const TimerContainer: React.FC = () => {
 
 		return () => {
 			clearInterval(intervalId.current);
+			setTimer(TIMEOUT_TOTAL);
 		};
-	}, [gameData]);
+	}, [gameData.turnOf]);
 
 	//Count down when timer changes
 	useEffect(() => {
