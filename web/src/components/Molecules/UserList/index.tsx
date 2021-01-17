@@ -1,10 +1,10 @@
 import React from "react";
-import { ClientUserData } from "../../../../../shared/models/user.model";
+import { UserGameData } from "../../../../../shared/models/game.model";
 import User from "../../Atoms/User";
 import styles from "./index.module.css";
 
 interface Props {
-	users: ClientUserData[];
+	users: UserGameData[];
 }
 
 const UserList: React.FC<Props> = ({ users }) => {

@@ -1,9 +1,13 @@
 import { ClientUserData } from "./user.model";
 
+export interface UserGameData extends ClientUserData {
+	points: number;
+}
+
 export interface GameData {
 	roomId: string;
 	host: string;
-	users: ClientUserData[];
+	users: UserGameData[];
 	turnOf: string;
 	turnIndex: number;
 	currentTurn: number;

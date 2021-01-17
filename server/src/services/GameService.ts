@@ -54,12 +54,12 @@ export default class GameService {
 				return;
 			}
 
-			if (game.users.includes(userData)) {
+			if (game.users.find((user) => user.userId === userData.userId)) {
 				reject(new Error(`User with id ${userData.userId} is already in game`));
 				return;
 			}
 
-			game.users.push(userData);
+			game.users.push({ ...userData, points: 0 });
 			resolve(game);
 		});
 	}
@@ -140,6 +140,42 @@ export default class GameService {
 			}
 
 			this.increaseTurn(game);
+			resolve(game);
+		});
+	}
+
+	static checkGuessWord(userData: ClientUserData, userWord: string) {
+		return new Promise<GameData>((resolve, reject) => {
+			if (!userWord) reject(new Error(`No word provided`));
+
+			const game = this.games.find((game) => game.roomId === userData.roomId);
+			if (!game) {
+				reject(new Error(`Game with roomId: ${userData.roomId} not found`));
+				return;
+			}
+
+			const user = game.users.find((user) => user.userId === userData.userId);
+			if (!user) {
+				reject(new Error(`User with id: ${userData.userId} not found`));
+				return;
+			}
+
+			if (game.turnOf === user.userId) {
+				reject(new Error(`This user is drawing, cant guess`));
+				return;
+			}
+
+			if (userWord !== game.guessWord) {
+				reject(new Error(`Wrong guess word`));
+				return;
+			}
+
+			console.log(
+				`USER ${userData.username} guessed the word ${game.guessWord}`
+			);
+			this.increaseTurn(game);
+			user.points++;
+
 			resolve(game);
 		});
 	}
