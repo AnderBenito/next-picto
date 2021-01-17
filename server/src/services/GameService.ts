@@ -81,6 +81,12 @@ export default class GameService {
 			}
 
 			game.users.splice(userIndex, 1);
+
+			//Increase turn when user leave if its his turn
+			if (game.turnOf === userData.userId) {
+				this.increaseTurn(game);
+			}
+
 			resolve(game);
 		});
 	}
@@ -139,6 +145,8 @@ export default class GameService {
 	}
 
 	private static increaseTurn(game: GameData) {
+		if (!game.started) return;
+
 		if (game.turnIndex >= game.users.length - 1) {
 			game.turnIndex = 0;
 			if (game.currentTurn >= game.totalTurns) {
