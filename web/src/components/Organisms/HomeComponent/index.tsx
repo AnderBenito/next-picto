@@ -1,5 +1,4 @@
 import React from "react";
-import { UserData } from "../../../../../shared/models/user.model";
 import RoomSelectContainer from "../../../containers/RoomSelectContainer";
 import styles from "./index.module.css";
 
