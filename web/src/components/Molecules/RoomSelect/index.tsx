@@ -23,6 +23,10 @@ const RoomSelect: React.FC<Props> = ({
 }) => {
 	const [isJoining, setIsJoining] = useState<boolean>(false);
 
+	const usernameError = () => {
+		return !!user.username;
+	};
+
 	return (
 		<>
 			<div className={styles["box-container"]}>
@@ -46,6 +50,7 @@ const RoomSelect: React.FC<Props> = ({
 						type="text"
 						value={user.username}
 						onChange={handleUsername}
+						className={usernameError() ? "" : styles["error"]}
 					></input>
 					{isJoining && (
 						<>

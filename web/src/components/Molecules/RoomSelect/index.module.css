@@ -26,6 +26,10 @@
 	font-size: 1.3rem;
 }
 
+.box-container .error {
+	border-color: var(--red);
+}
+
 .box-container input:focus {
 	outline-width: 0;
 }
